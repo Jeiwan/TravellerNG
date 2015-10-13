@@ -1,6 +1,7 @@
 /*@ngInject*/
 export class ToursController {
   constructor() {
+    this.formVisible = false;
     this.newTour = new Tour();
 
     this.tours = [{
@@ -27,6 +28,16 @@ export class ToursController {
     this.tours = this.tours.filter((e) => {
       return e.$$hashKey !== tour.$$hashKey;
     });
+    return true;
+  }
+
+  showForm() {
+    this.formVisible = true;
+    return true;
+  }
+
+  hideForm() {
+    this.formVisible = false;
     return true;
   }
 }

@@ -1,4 +1,8 @@
-form
+.row
+  .col-md-12
+    a.btn.btn-primary.pull-right ng-disabled="vm.formVisible" ng-click="vm.showForm()" Добавить новый тур
+
+form ng-show="vm.formVisible"
   .form-group
     label.control-label Название
     input.form-control type="text" ng-model="vm.newTour.title"
@@ -12,6 +16,7 @@ form
     label.control-label Стоимость
     input.form-control type="number" ng-model="vm.newTour.price"
   .form-group
+    button.btn.btn-default.pull-right ng-click="vm.hideForm()" Отменить
     button.btn.btn-info.pull-right ng-click="vm.addTour()" Добавить тур
 .clearfix
 
