@@ -8,7 +8,7 @@ import { NavbarController } from './components/navbar/navbar.controller.js';
 import { Navbar } from './components/navbar/navbar.directive.js'
 
 
-angular.module('tnTrips', ['ngRoute'])
+angular.module('TravellerNG', ['ngRoute'])
   .config(config)
   .config(routerConfig)
   .controller('ToursController', ToursController)
