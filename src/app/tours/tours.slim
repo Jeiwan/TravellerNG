@@ -1,4 +1,18 @@
-a.btn.btn-info.pull-right Добавить тур
+form
+  .form-group
+    label.control-label Название
+    input.form-control type="text" ng-model="vm.newTour.title"
+  .form-group
+    label.control-label Страна
+    input.form-control type="text" ng-model="vm.newTour.country"
+  .form-group
+    label.control-label Описание
+    textarea.form-control ng-model="vm.newTour.text"
+  .form-group
+    label.control-label Стоимость
+    input.form-control type="number" ng-model="vm.newTour.price"
+  .form-group
+    button.btn.btn-info.pull-right ng-click="vm.addTour()" Добавить тур
 .clearfix
 
 article ng-repeat="tour in vm.tours"

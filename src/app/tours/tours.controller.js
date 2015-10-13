@@ -1,6 +1,8 @@
 /*@ngInject*/
 export class ToursController {
   constructor() {
+    this.newTour = new Tour();
+
     this.tours = [{
       title: 'Супер-пупер-мега-тур',
       country: 'Египет',
@@ -14,5 +16,20 @@ export class ToursController {
       price: 150.0
     }
     ];
+  }
+
+  addTour() {
+    console.log(this);
+    this.tours.push(this.newTour);
+    this.newTour = new Tour();
+  }
+}
+
+class Tour {
+  constructor(title, country, text, price) {
+    this.title = title;
+    this.country = country;
+    this.text = text;
+    this.price = price;
   }
 }
