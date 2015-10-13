@@ -18,11 +18,18 @@ export function ToursController() {
 }
 
 ToursController.prototype.addTour = function() {
-  this.tours.push(this.newTour);
-  this.newTour = new Tour();
-  this.hideForm();
+  if (this.newTour.validate()) {
+    this.tours.push(this.newTour);
+    this.newTour = new Tour();
+    this.hideForm();
 
-  return true;
+    return true;
+  } else {
+    alert('Ошика валидации');
+
+    return true;
+  }
+
 }
 
 ToursController.prototype.removeTour = function(tour) {
@@ -50,4 +57,33 @@ function Tour(title, country, text, price) {
   this.country = country;
   this.text = text;
   this.price = price;
+}
+
+Tour.prototype.validate = function() {
+  var t = this;
+
+  var validateTitle = function() {
+    return typeof this.title !== 'undefined' && this.title.length > 3;
+  };
+
+  var validateCountry = function() {
+    return typeof this.country !== 'undefined' && this.country.length > 3;
+  }
+
+  var validateText = function() {
+    return typeof this.text !== 'undefined' && this.text.length > 3;
+  }
+
+  var validatePrice = function() {
+    return typeof this.price !== 'undefined' && parseFloat(this.price, 10) > 0;
+  }
+
+  var validations = [
+    validateTitle,
+    validateCountry,
+    validateText,
+    validatePrice
+  ];
+
+  return validations.every((v) => v.apply(t));
 }
