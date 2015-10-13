@@ -1,2 +1,12 @@
-ul
-  li ng-repeat="tour in vm.tours" {{ tour }}
+a.btn.btn-info.pull-right Добавить тур
+.clearfix
+
+article ng-repeat="tour in vm.tours"
+  .row
+    .col-md-12
+      h2
+        |{{ tour.country + ': ' + tour.title }} 
+        strong.label.label-success ng-bind="tour.price + ' ₽'"
+  .row
+    .col-md-12
+      p {{ tour.text }}
