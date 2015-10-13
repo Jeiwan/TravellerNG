@@ -24,3 +24,6 @@ article ng-repeat="tour in vm.tours"
   .row
     .col-md-12
       p {{ tour.text }}
+  .row
+    .col-md-12
+      a.pull-right href="" ng-click="vm.removeTour(tour)" Удалить

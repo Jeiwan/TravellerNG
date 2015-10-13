@@ -19,9 +19,15 @@ export class ToursController {
   }
 
   addTour() {
-    console.log(this);
     this.tours.push(this.newTour);
     this.newTour = new Tour();
+  }
+
+  removeTour(tour) {
+    this.tours = this.tours.filter((e) => {
+      return e.$$hashKey !== tour.$$hashKey;
+    });
+    return true;
   }
 }
 
