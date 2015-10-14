@@ -4,7 +4,7 @@ export function ToursController() {
   this.editedTour = new Tour();
 
   if (localStorage.getItem('tours') !== null) {
-    this.tours = this.getTours() || [];
+    this.tours = this.getTours();
   } else {
     this.tours = [{
       title: 'Супер-пупер-мега-тур',
@@ -20,6 +20,7 @@ export function ToursController() {
   }
 }
 
+// Добавление тура в список
 ToursController.prototype.addTour = function() {
   if (this.newTour.validate()) {
     this.tours.push(this.newTour);
@@ -30,12 +31,13 @@ ToursController.prototype.addTour = function() {
 
     return true;
   } else {
-    alert('Ошика валидации');
+    alert('Ошибка валидации');
 
     return true;
   }
 };
 
+// Удаление тура из списка
 ToursController.prototype.removeTour = function(tour) {
   this.tours = this.tours.filter((e) => {
     return e.$$hashKey !== tour.$$hashKey;
@@ -46,18 +48,21 @@ ToursController.prototype.removeTour = function(tour) {
   return true;
 };
 
+// Показать форму добавления нового тура
 ToursController.prototype.showForm = function() {
   this.formVisible = true;
 
   return true;
 };
 
+// Спрятать форму добавления нового тура
 ToursController.prototype.hideForm = function() {
   this.formVisible = false;
 
   return true;
 };
 
+// Показать форму редактирования тура
 ToursController.prototype.editTour = function(tour) {
   this.tours.forEach((t) => { t.editFormVisible = false; });
   for (var k in tour) {
@@ -68,6 +73,7 @@ ToursController.prototype.editTour = function(tour) {
   return true;
 };
 
+// Отменить редактирование тура
 ToursController.prototype.cancelEditTour = function(tour) {
   tour.editFormVisible = false;
   this.editedTour = new Tour();
@@ -75,6 +81,7 @@ ToursController.prototype.cancelEditTour = function(tour) {
   return true;
 };
 
+// Сохранить изменения после редактирования тура
 ToursController.prototype.updateTour = function(tour) {
   if (this.editedTour.validate()) {
     tour.editFormVisible = false;
@@ -95,12 +102,14 @@ ToursController.prototype.updateTour = function(tour) {
   }
 };
 
+// Сохранить туры в localStorage
 ToursController.prototype.storeTours = function()  {
   localStorage.setItem('tours', angular.toJson(this.tours));
 
   return true;
 };
 
+// Загрузить туры из localStorage'а
 ToursController.prototype.getTours = function()  {
   var tours = localStorage.getItem('tours');
 
@@ -115,6 +124,7 @@ function Tour(title, country, text, price) {
   this.editFormVisible = false;
 }
 
+// Валидация полей тура
 Tour.prototype.validate = function() {
   var t = this;
 
@@ -123,7 +133,7 @@ Tour.prototype.validate = function() {
   };
 
   var validateCountry = function() {
-    return typeof this.country !== 'undefined' && this.country.length > 3;
+    return typeof this.country !== 'undefined' && this.country.length >= 3;
   }
 
   var validateText = function() {

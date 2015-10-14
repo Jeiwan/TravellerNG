@@ -1,4 +1,4 @@
-export function Navbar() {
+export function NavbarDirective() {
   return {
     restrict: 'E',
     controller: 'NavbarController',

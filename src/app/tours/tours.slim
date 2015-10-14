@@ -1,15 +1,17 @@
 .row
   .col-md-12
-    a.btn.btn-primary.pull-right ng-disabled="vm.formVisible" ng-click="vm.showForm()" Добавить новый тур
+    a.btn.btn-primary.pull-right ng-disabled="vm.formVisible" ng-click="vm.showForm()"
+      span.glyphicon.glyphicon-plus
+      |  Добавить новый тур
 
 form.new-tour-form ng-show="vm.formVisible"
   .form-group.row
     .col-xs-2
-      label.control-label Название
-      input.form-control type="text" ng-model="vm.newTour.title"
-    .col-xs-8
       label.control-label Страна
       input.form-control type="text" ng-model="vm.newTour.country"
+    .col-xs-8
+      label.control-label Название
+      input.form-control type="text" ng-model="vm.newTour.title"
     .col-xs-2
       label.control-label Стоимость
       input.form-control type="number" ng-model="vm.newTour.price"
@@ -21,20 +23,22 @@ form.new-tour-form ng-show="vm.formVisible"
     button.new-tour-btn.btn.btn-info.pull-right ng-click="vm.addTour()" Добавить тур
 .clearfix
 
-article ng-repeat="tour in vm.tours"
-  div ng-hide="tour.editFormVisible"
-    .row
-      .col-md-12
-        h2
-          |{{ tour.country + ': ' + tour.title }} 
-          strong.label.label-success ng-bind="tour.price + ' ₽'"
-    .row
-      .col-md-12
-        p {{ tour.text }}
-    .row
-      .col-md-12
-        a.pull-right href="" ng-click="vm.removeTour(tour)" Удалить
-        a.edit-tour.pull-right href="" ng-click="vm.editTour(tour)" Редактировать
+.tour ng-repeat="tour in vm.tours"
+  .panel.panel-default ng-hide="tour.editFormVisible"
+    .panel-body
+      h3
+        |{{ tour.country + ': ' + tour.title }} 
+        strong.label.label-success ng-bind="tour.price + ' ₽'"
+      hr
+      p {{ tour.text }}
+    .panel-footer
+      a.text-danger.pull-right href="" ng-click="vm.removeTour(tour)"
+        span.glyphicon.glyphicon-remove
+        |  Удалить
+      a.edit-tour.pull-right href="" ng-click="vm.editTour(tour)"
+        span.glyphicon.glyphicon-pencil
+        |  Редактировать
+      .clearfix
 
   form.edit-tour-form ng-show="tour.editFormVisible"
     .form-group.row
