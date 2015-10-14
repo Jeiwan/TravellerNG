@@ -1,20 +1,19 @@
 export function ToursController() {
   this.formVisible = false;
   this.newTour = new Tour();
+  this.editedTour = new Tour();
 
   this.tours = [{
     title: 'Супер-пупер-мега-тур',
     country: 'Египет',
     text: 'Антарктический пояс последовательно надкусывает различный материк. Фудзияма, как бы это ни казалось парадоксальным, откровенна. Верховье, на первый взгляд, поднимает комбинированный тур. Здесь работали Карл Маркс и Владимир Ленин, но отгонное животноводство мгновенно.',
     price: 100.0
-  },
-  {
+  }, {
     title: 'Лучшие курорты Австрии, большие зоны катания и разнообразные трассы',
     country: 'Австрия',
     text: 'Водохранилище надкусывает пингвин. Винный фестиваль проходит в приусадебном музее Георгикон, там же музей под открытым небом сложен. Крокодиловая ферма Самут Пракан - самая большая в мире, однако Восточно-Африканское плоскогорье существенно начинает традиционный символический центр современного Лондона.',
     price: 150.0
-  }
-  ];
+  }];
 }
 
 ToursController.prototype.addTour = function() {
@@ -29,8 +28,7 @@ ToursController.prototype.addTour = function() {
 
     return true;
   }
-
-}
+};
 
 ToursController.prototype.removeTour = function(tour) {
   this.tours = this.tours.filter((e) => {
@@ -38,25 +36,61 @@ ToursController.prototype.removeTour = function(tour) {
   });
 
   return true;
-}
+};
 
 ToursController.prototype.showForm = function() {
   this.formVisible = true;
 
   return true;
-}
+};
 
 ToursController.prototype.hideForm = function() {
   this.formVisible = false;
 
   return true;
-}
+};
+
+ToursController.prototype.editTour = function(tour) {
+  this.tours.forEach((t) => { t.editFormVisible = false; });
+  for (var k in tour) {
+    this.editedTour[k] = tour[k];
+  }
+  tour.editFormVisible = true;
+
+  return true;
+};
+
+ToursController.prototype.cancelEditTour = function(tour) {
+  tour.editFormVisible = false;
+  this.editedTour = new Tour();
+
+  return true;
+};
+
+ToursController.prototype.updateTour = function(tour) {
+  if (this.editedTour.validate()) {
+    tour.editFormVisible = false;
+
+    for (var k in this.editedTour) {
+      tour[k] = this.editedTour[k];
+    }
+
+    this.editedTour = {};
+
+    return true;
+  } else {
+    alert('Ошибка валидации');
+
+    return false;
+  }
+};
 
 function Tour(title, country, text, price) {
   this.title = title;
   this.country = country;
   this.text = text;
   this.price = price;
+  this.editFormVisible = false;
 }
 
 Tour.prototype.validate = function() {
@@ -86,4 +120,4 @@ Tour.prototype.validate = function() {
   ];
 
   return validations.every((v) => v.apply(t));
-}
+};

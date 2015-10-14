@@ -16,19 +16,37 @@ form ng-show="vm.formVisible"
     label.control-label Стоимость
     input.form-control type="number" ng-model="vm.newTour.price"
   .form-group
-    button.btn.btn-default.pull-right ng-click="vm.hideForm()" Отменить
+    a.btn.btn-default.pull-right href="" ng-click="vm.hideForm()" Отменить
     button.btn.btn-info.pull-right ng-click="vm.addTour()" Добавить тур
 .clearfix
 
 article ng-repeat="tour in vm.tours"
-  .row
-    .col-md-12
-      h2
-        |{{ tour.country + ': ' + tour.title }} 
-        strong.label.label-success ng-bind="tour.price + ' ₽'"
-  .row
-    .col-md-12
-      p {{ tour.text }}
-  .row
-    .col-md-12
-      a.pull-right href="" ng-click="vm.removeTour(tour)" Удалить
+  div ng-hide="tour.editFormVisible"
+    .row
+      .col-md-12
+        h2
+          |{{ tour.country + ': ' + tour.title }} 
+          strong.label.label-success ng-bind="tour.price + ' ₽'"
+    .row
+      .col-md-12
+        p {{ tour.text }}
+    .row
+      .col-md-12
+        a.pull-right href="" ng-click="vm.removeTour(tour)" Удалить
+        a.edit-tour.pull-right href="" ng-click="vm.editTour(tour)" Редактировать
+
+  form.edit-tour-form ng-show="tour.editFormVisible"
+    .form-group.row
+      .col-xs-2
+        input.form-control type="text" ng-model="vm.editedTour.country"
+      .col-xs-8
+        input.form-control type="text" ng-model="vm.editedTour.title"
+      .col-xs-2
+        input.form-control type="number" ng-model="vm.editedTour.price"
+    .form-group
+      textarea.form-control rows="5" ng-model="vm.editedTour.text"
+    .form-group
+    .form-group
+      button.btn.btn-default.pull-right ng-click="vm.cancelEditTour(tour)" Отменить
+      button.save-edit-tour.btn.btn-info.pull-right ng-click="vm.updateTour(tour)" Сохранить
+  .clearfix
