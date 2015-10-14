@@ -3,17 +3,21 @@ export function ToursController() {
   this.newTour = new Tour();
   this.editedTour = new Tour();
 
-  this.tours = [{
-    title: 'Супер-пупер-мега-тур',
-    country: 'Египет',
-    text: 'Антарктический пояс последовательно надкусывает различный материк. Фудзияма, как бы это ни казалось парадоксальным, откровенна. Верховье, на первый взгляд, поднимает комбинированный тур. Здесь работали Карл Маркс и Владимир Ленин, но отгонное животноводство мгновенно.',
-    price: 100.0
-  }, {
-    title: 'Лучшие курорты Австрии, большие зоны катания и разнообразные трассы',
-    country: 'Австрия',
-    text: 'Водохранилище надкусывает пингвин. Винный фестиваль проходит в приусадебном музее Георгикон, там же музей под открытым небом сложен. Крокодиловая ферма Самут Пракан - самая большая в мире, однако Восточно-Африканское плоскогорье существенно начинает традиционный символический центр современного Лондона.',
-    price: 150.0
-  }];
+  if (localStorage.getItem('tours') !== null) {
+    this.tours = this.getTours() || [];
+  } else {
+    this.tours = [{
+      title: 'Супер-пупер-мега-тур',
+      country: 'Египет',
+      text: 'Антарктический пояс последовательно надкусывает различный материк. Фудзияма, как бы это ни казалось парадоксальным, откровенна. Верховье, на первый взгляд, поднимает комбинированный тур. Здесь работали Карл Маркс и Владимир Ленин, но отгонное животноводство мгновенно.',
+      price: 100.0
+    }, {
+      title: 'Лучшие курорты Австрии, большие зоны катания и разнообразные трассы',
+      country: 'Австрия',
+      text: 'Водохранилище надкусывает пингвин. Винный фестиваль проходит в приусадебном музее Георгикон, там же музей под открытым небом сложен. Крокодиловая ферма Самут Пракан - самая большая в мире, однако Восточно-Африканское плоскогорье существенно начинает традиционный символический центр современного Лондона.',
+      price: 150.0
+    }];
+  }
 }
 
 ToursController.prototype.addTour = function() {
@@ -21,6 +25,8 @@ ToursController.prototype.addTour = function() {
     this.tours.push(this.newTour);
     this.newTour = new Tour();
     this.hideForm();
+
+    this.storeTours();
 
     return true;
   } else {
@@ -34,6 +40,8 @@ ToursController.prototype.removeTour = function(tour) {
   this.tours = this.tours.filter((e) => {
     return e.$$hashKey !== tour.$$hashKey;
   });
+
+  this.storeTours();
 
   return true;
 };
@@ -75,6 +83,8 @@ ToursController.prototype.updateTour = function(tour) {
       tour[k] = this.editedTour[k];
     }
 
+    this.storeTours();
+
     this.editedTour = {};
 
     return true;
@@ -83,6 +93,18 @@ ToursController.prototype.updateTour = function(tour) {
 
     return false;
   }
+};
+
+ToursController.prototype.storeTours = function()  {
+  localStorage.setItem('tours', angular.toJson(this.tours));
+
+  return true;
+};
+
+ToursController.prototype.getTours = function()  {
+  var tours = localStorage.getItem('tours');
+
+  return JSON.parse(tours);
 };
 
 function Tour(title, country, text, price) {
