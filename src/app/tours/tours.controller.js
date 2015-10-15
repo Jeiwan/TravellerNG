@@ -1,155 +1,190 @@
 export function ToursController() {
-  this.formVisible = false;
-  this.newTour = new Tour();
-  this.editedTour = new Tour();
+  var tours = this;
 
-  if (localStorage.getItem('tours') !== null) {
-    this.tours = this.getTours();
-  } else {
-    this.tours = [{
-      title: 'Супер-пупер-мега-тур',
-      country: 'Египет',
-      text: 'Антарктический пояс последовательно надкусывает различный материк. Фудзияма, как бы это ни казалось парадоксальным, откровенна. Верховье, на первый взгляд, поднимает комбинированный тур. Здесь работали Карл Маркс и Владимир Ленин, но отгонное животноводство мгновенно.',
-      price: 100.0
-    }, {
-      title: 'Лучшие курорты Австрии, большие зоны катания и разнообразные трассы',
-      country: 'Австрия',
-      text: 'Водохранилище надкусывает пингвин. Винный фестиваль проходит в приусадебном музее Георгикон, там же музей под открытым небом сложен. Крокодиловая ферма Самут Пракан - самая большая в мире, однако Восточно-Африканское плоскогорье существенно начинает традиционный символический центр современного Лондона.',
-      price: 150.0
-    }];
+  this.newFormVisible = false;
+  this.new_ = new Tour();
+  this.edited = new Tour();
+
+  this.add = add;
+  this.remove = remove;
+  this.showNewForm = showNewForm;
+  this.hideNewForm = hideNewForm;
+  this.edit = edit;
+  this.cancelEdit = cancelEdit;
+  this.update = update;
+  this.store = store;
+  this.get = get;
+
+  activate();
+
+  function activate() {
+    if (localStorage.getItem('tours') !== null) {
+      tours.all = tours.get();
+    } else {
+      tours.all = [
+        new Tour(
+          'Супер-пупер-мега-тур',
+          'Египет',
+          'Антарктический пояс последовательно надкусывает различный материк. Фудзияма, как бы это ни казалось парадоксальным, откровенна. Верховье, на первый взгляд, поднимает комбинированный тур. Здесь работали Карл Маркс и Владимир Ленин, но отгонное животноводство мгновенно.',
+          100.0
+        ),
+        new Tour(
+          'Лучшие курорты Австрии, большие зоны катания и разнообразные трассы',
+          'Австрия',
+          'Водохранилище надкусывает пингвин. Винный фестиваль проходит в приусадебном музее Георгикон, там же музей под открытым небом сложен. Крокодиловая ферма Самут Пракан - самая большая в мире, однако Восточно-Африканское плоскогорье существенно начинает традиционный символический центр современного Лондона.',
+          150.0
+        )
+      ];
+    }
   }
-}
 
-// Добавление тура в список
-ToursController.prototype.addTour = function() {
-  if (this.newTour.validate()) {
-    this.tours.push(this.newTour);
-    this.newTour = new Tour();
-    this.hideForm();
+  // Добавление тура в список
+  function add() {
+    if (this.new_.validate()) {
+      tours.all.push(tours.new_);
+      tours.new_ = new Tour();
+      tours.hideNewForm();
 
-    this.storeTours();
+      tours.store();
+
+      return true;
+    } else {
+      alert('Ошибка валидации');
+
+      return true;
+    }
+  }
+
+  // Удаление тура из списка
+  function remove(tour) {
+    tours.all = tours.all.filter((e) => {
+      return e.$$hashKey !== tour.$$hashKey;
+    });
+
+    tours.store();
 
     return true;
-  } else {
-    alert('Ошибка валидации');
+  }
+
+  // Показать форму добавления нового тура
+  function showNewForm() {
+    tours.newFormVisible = true;
 
     return true;
   }
-};
 
-// Удаление тура из списка
-ToursController.prototype.removeTour = function(tour) {
-  this.tours = this.tours.filter((e) => {
-    return e.$$hashKey !== tour.$$hashKey;
-  });
+  // Спрятать форму добавления нового тура
+  function hideNewForm() {
+    tours.newFormVisible = false;
 
-  this.storeTours();
+    return true;
+  };
 
-  return true;
-};
+  // Показать форму редактирования тура
+  function edit(tour) {
+    tours.all.forEach((t) => { t._state = 'show'; });
 
-// Показать форму добавления нового тура
-ToursController.prototype.showForm = function() {
-  this.formVisible = true;
-
-  return true;
-};
-
-// Спрятать форму добавления нового тура
-ToursController.prototype.hideForm = function() {
-  this.formVisible = false;
-
-  return true;
-};
-
-// Показать форму редактирования тура
-ToursController.prototype.editTour = function(tour) {
-  this.tours.forEach((t) => { t.editFormVisible = false; });
-  for (var k in tour) {
-    this.editedTour[k] = tour[k];
-  }
-  tour.editFormVisible = true;
-
-  return true;
-};
-
-// Отменить редактирование тура
-ToursController.prototype.cancelEditTour = function(tour) {
-  tour.editFormVisible = false;
-  this.editedTour = new Tour();
-
-  return true;
-};
-
-// Сохранить изменения после редактирования тура
-ToursController.prototype.updateTour = function(tour) {
-  if (this.editedTour.validate()) {
-    tour.editFormVisible = false;
-
-    for (var k in this.editedTour) {
-      tour[k] = this.editedTour[k];
+    for (var k in tour) {
+      tours.edited[k] = tour[k];
     }
 
-    this.storeTours();
-
-    this.editedTour = {};
+    tour.edit();
 
     return true;
-  } else {
-    alert('Ошибка валидации');
+  };
 
-    return false;
-  }
-};
+  // Отменить редактирование тура
+  function cancelEdit(tour) {
+    tour.show();
+    tours.edited = new Tour();
 
-// Сохранить туры в localStorage
-ToursController.prototype.storeTours = function()  {
-  localStorage.setItem('tours', angular.toJson(this.tours));
+    return true;
+  };
 
-  return true;
-};
+  // Сохранить изменения после редактирования тура
+  function update(tour) {
+    if (tours.edited.validate()) {
+      tour.show();
 
-// Загрузить туры из localStorage'а
-ToursController.prototype.getTours = function()  {
-  var tours = localStorage.getItem('tours');
+      for (var k in tours.edited) {
+        tour[k] = tours.edited[k];
+      }
 
-  return JSON.parse(tours);
-};
+      tours.store();
+
+      tours.edited = new Tour();
+
+      return true;
+    } else {
+      alert('Ошибка валидации');
+
+      return false;
+    }
+  };
+
+  // Сохранить туры в localStorage
+  function store()  {
+    localStorage.setItem('tours', angular.toJson(tours.all));
+
+    return true;
+  };
+
+  // Загрузить туры из localStorage'а
+  function get()  {
+    var storedTours = angular.fromJson(localStorage.getItem('tours'));
+
+    return storedTours.map((tour) => {
+      return new Tour(tour.title, tour.country, tour.text, tour.price);
+    });
+  };
+}
 
 function Tour(title, country, text, price) {
+  var t = this;
+
   this.title = title;
   this.country = country;
   this.text = text;
   this.price = price;
-  this.editFormVisible = false;
-}
+  this._state = 'show';
 
-// Валидация полей тура
-Tour.prototype.validate = function() {
-  var t = this;
+  this.validate = validate;
+  this.edit = edit;
+  this.show = show;
 
-  var validateTitle = function() {
-    return typeof this.title !== 'undefined' && this.title.length > 3;
+  // Валидация полей тура
+  function validate() {
+    var validateTitle = function() {
+      return typeof this.title !== 'undefined' && this.title.length > 3;
+    };
+
+    var validateCountry = function() {
+      return typeof this.country !== 'undefined' && this.country.length >= 3;
+    }
+
+    var validateText = function() {
+      return typeof this.text !== 'undefined' && this.text.length > 3;
+    }
+
+    var validatePrice = function() {
+      return typeof this.price !== 'undefined' && parseFloat(this.price, 10) > 0;
+    }
+
+    var validations = [
+      validateTitle,
+      validateCountry,
+      validateText,
+      validatePrice
+    ];
+
+    return validations.every((v) => v.apply(t));
   };
 
-  var validateCountry = function() {
-    return typeof this.country !== 'undefined' && this.country.length >= 3;
+  function edit() {
+    t._state = 'edit';
   }
 
-  var validateText = function() {
-    return typeof this.text !== 'undefined' && this.text.length > 3;
+  function show() {
+    t._state = 'show';
   }
-
-  var validatePrice = function() {
-    return typeof this.price !== 'undefined' && parseFloat(this.price, 10) > 0;
-  }
-
-  var validations = [
-    validateTitle,
-    validateCountry,
-    validateText,
-    validatePrice
-  ];
-
-  return validations.every((v) => v.apply(t));
-};
+}

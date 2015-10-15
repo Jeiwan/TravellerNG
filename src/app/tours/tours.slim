@@ -1,30 +1,30 @@
 .row
   .col-md-12
-    a.btn.btn-primary.pull-right ng-disabled="vm.formVisible" ng-click="vm.showForm()"
+    a.btn.btn-primary.pull-right ng-disabled="tours.newFormVisible" ng-click="tours.showNewForm()"
       span.glyphicon.glyphicon-plus
       |  Добавить новый тур
 
-form.new-tour-form ng-show="vm.formVisible"
+form.new-tour-form ng-show="tours.newFormVisible"
   .form-group.row
     .col-xs-2
       label.control-label Страна
-      input.form-control type="text" ng-model="vm.newTour.country"
+      input.form-control type="text" ng-model="tours.new_.country"
     .col-xs-8
       label.control-label Название
-      input.form-control type="text" ng-model="vm.newTour.title"
+      input.form-control type="text" ng-model="tours.new_.title"
     .col-xs-2
       label.control-label Стоимость
-      input.form-control type="number" ng-model="vm.newTour.price"
+      input.form-control type="number" ng-model="tours.new_.price"
   .form-group
     label.control-label Описание
-    textarea.form-control rows="5" ng-model="vm.newTour.text"
+    textarea.form-control rows="5" ng-model="tours.new_.text"
   .form-group
-    a.btn.btn-default.pull-right href="" ng-click="vm.hideForm()" Отменить
-    button.new-tour-btn.btn.btn-info.pull-right ng-click="vm.addTour()" Добавить тур
+    a.btn.btn-default.pull-right href="" ng-click="tours.hideNewForm()" Отменить
+    button.new-tour-btn.btn.btn-info.pull-right ng-click="tours.add()" Добавить тур
 .clearfix
 
-.tour ng-repeat="tour in vm.tours"
-  .panel.panel-default ng-hide="tour.editFormVisible"
+.tour ng-repeat="tour in tours.all"
+  .panel.panel-default ng-show="tour._state == 'show'"
     .panel-body
       h3
         |{{ tour.country + ': ' + tour.title }} 
@@ -32,26 +32,26 @@ form.new-tour-form ng-show="vm.formVisible"
       hr
       p {{ tour.text }}
     .panel-footer
-      a.text-danger.pull-right href="" ng-click="vm.removeTour(tour)"
+      a.text-danger.pull-right href="" ng-click="tours.remove(tour)"
         span.glyphicon.glyphicon-remove
         |  Удалить
-      a.edit-tour.pull-right href="" ng-click="vm.editTour(tour)"
+      a.edit-tour.pull-right href="" ng-click="tours.edit(tour)"
         span.glyphicon.glyphicon-pencil
         |  Редактировать
       .clearfix
 
-  form.edit-tour-form ng-show="tour.editFormVisible"
+  form.edit-tour-form ng-show="tour._state === 'edit'"
     .form-group.row
       .col-xs-2
-        input.form-control type="text" ng-model="vm.editedTour.country"
+        input.form-control type="text" ng-model="tours.edited.country"
       .col-xs-8
-        input.form-control type="text" ng-model="vm.editedTour.title"
+        input.form-control type="text" ng-model="tours.edited.title"
       .col-xs-2
-        input.form-control type="number" ng-model="vm.editedTour.price"
+        input.form-control type="number" ng-model="tours.edited.price"
     .form-group
-      textarea.form-control rows="5" ng-model="vm.editedTour.text"
+      textarea.form-control rows="5" ng-model="tours.edited.text"
     .form-group
     .form-group
-      button.btn.btn-default.pull-right ng-click="vm.cancelEditTour(tour)" Отменить
-      button.save-edit-tour.btn.btn-info.pull-right ng-click="vm.updateTour(tour)" Сохранить
+      button.btn.btn-default.pull-right ng-click="tours.cancelEdit(tour)" Отменить
+      button.save-edit-tour.btn.btn-info.pull-right ng-click="tours.update(tour)" Сохранить
   .clearfix

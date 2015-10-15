@@ -4,7 +4,7 @@ export function routerConfig ($routeProvider) {
     .when('/', {
       templateUrl: 'app/tours/tours.html',
       controller: 'ToursController',
-      controllerAs: 'vm'
+      controllerAs: 'tours'
     })
     .otherwise({
       redirectTo: '/'

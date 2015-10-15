@@ -2,7 +2,7 @@ export function NavbarDirective() {
   return {
     restrict: 'E',
     controller: 'NavbarController',
-    controllerAs: 'vm',
+    controllerAs: 'navbar',
     templateUrl: 'app/components/navbar/navbar.html'
   };
 }
