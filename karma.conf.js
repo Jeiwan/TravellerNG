@@ -35,7 +35,7 @@ module.exports = function(config) {
 
     ngHtml2JsPreprocessor: {
       stripPrefix: conf.paths.src + '/',
-      moduleName: 'tnTrips'
+      moduleName: 'TravellerNG'
     },
 
     logLevel: 'WARN',

@@ -1,25 +1,8 @@
 export function NavbarDirective() {
-  'ngInject';
-
-  let directive = {
+  return {
     restrict: 'E',
-    templateUrl: 'app/components/navbar/navbar.html',
-    scope: {
-        creationDate: '='
-    },
-    controller: NavbarController,
-    controllerAs: 'vm',
-    bindToController: true
+    controller: 'NavbarController',
+    controllerAs: 'navbar',
+    templateUrl: 'app/components/navbar/navbar.html'
   };
-
-  return directive;
-}
-
-class NavbarController {
-  constructor (moment) {
-    'ngInject';
-
-    // "this.creation" is avaible by directive option "bindToController: true"
-    this.relativeDate = moment(this.creationDate).fromNow();
-  }
 }
