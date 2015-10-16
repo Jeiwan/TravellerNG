@@ -1,57 +1,15 @@
 .row
-  .col-md-12
-    a.btn.btn-primary.pull-right ng-disabled="tours.newFormVisible" ng-click="tours.showNewForm()"
-      span.glyphicon.glyphicon-plus
-      |  Добавить новый тур
+  .col-xs-12
+    form.form-inline
+      label Подбор тура:
+      select.form-control.country-filter-select ng-model="tours.countryFilter" ng-options="country.id as country.name for country in tours.countries"
+      a.reset-filter-select href="" ng-show="tours.countryFilterApplied()" ng-click="tours.resetCountryFilter()" Сбросить
 
-form.new-tour-form ng-show="tours.newFormVisible"
-  .form-group.row
-    .col-xs-2
-      label.control-label Страна
-      input.form-control type="text" ng-model="tours.new_.country"
-    .col-xs-8
-      label.control-label Название
-      input.form-control type="text" ng-model="tours.new_.title"
-    .col-xs-2
-      label.control-label Стоимость
-      input.form-control type="number" ng-model="tours.new_.price"
-  .form-group
-    label.control-label Описание
-    textarea.form-control rows="5" ng-model="tours.new_.text"
-  .form-group
-    a.btn.btn-default.pull-right href="" ng-click="tours.hideNewForm()" Отменить
-    button.new-tour-btn.btn.btn-info.pull-right ng-click="tours.add()" Добавить тур
-.clearfix
-
-.tour ng-repeat="tour in tours.all"
-  .panel.panel-default ng-show="tour._state == 'show'"
+.tour ng-repeat="tour in tours.all | filter:tours.filterByCountry"
+  .panel.panel-default
     .panel-body
       h3
-        |{{ tour.country + ': ' + tour.title }} 
-        strong.label.label-success ng-bind="tour.price + ' ₽'"
+        a ng-href="/#/tours/{{tour.id}}" {{ tours.countryFor(tour).name + ': ' + tour.title }}
+        strong.tour-price.label.label-success ng-bind="tour.price + ' ₽'"
       hr
-      p {{ tour.text }}
-    .panel-footer
-      a.text-danger.pull-right href="" ng-click="tours.remove(tour)"
-        span.glyphicon.glyphicon-remove
-        |  Удалить
-      a.edit-tour.pull-right href="" ng-click="tours.edit(tour)"
-        span.glyphicon.glyphicon-pencil
-        |  Редактировать
-      .clearfix
-
-  form.edit-tour-form ng-show="tour._state === 'edit'"
-    .form-group.row
-      .col-xs-2
-        input.form-control type="text" ng-model="tours.edited.country"
-      .col-xs-8
-        input.form-control type="text" ng-model="tours.edited.title"
-      .col-xs-2
-        input.form-control type="number" ng-model="tours.edited.price"
-    .form-group
-      textarea.form-control rows="5" ng-model="tours.edited.text"
-    .form-group
-    .form-group
-      button.btn.btn-default.pull-right ng-click="tours.cancelEdit(tour)" Отменить
-      button.save-edit-tour.btn.btn-info.pull-right ng-click="tours.update(tour)" Сохранить
-  .clearfix
+      p {{ tours.limitedText(tour) }}

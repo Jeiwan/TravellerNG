@@ -5,5 +5,12 @@ nav.navbar.navbar-default
         span.glyphicon.glyphicon-globe
         |  TravellerNG
     ul.nav.navbar-nav
-      li.active
+      li class="{{ navbar.isActive('ToursController') }}"
         a href="/#/" Все туры
+      li class="{{ navbar.isActive('CountriesController') }}"
+        a href="/#/countries" Страны
+    ul.nav.navbar-nav.pull-right ng-show="navbar.currentUserIsAdmin()"
+      li class="{{ navbar.isActive('AdminToursController') }}"
+        a href="/#/admin/tours" Все туры
+      li class="{{ navbar.isActive('AdminCountriesController') }}"
+        a href="/#/admin/countries" Страны
