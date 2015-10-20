@@ -1,0 +1,29 @@
+.row
+  .col-md-6
+    a.btn.btn-primary.pull-right ng-hide="countries.state.newForm.visible" ng-click="countries.showNewForm()"
+      span.glyphicon.glyphicon-plus
+      |  Добавить страну
+    form.new-country-tour.row ng-show="countries.state.newForm.visible"
+      .col-xs-6
+        input.form-control ng-model="countries.new_.name"
+      .col-xs-6
+        button.btn.btn-default.pull-right ng-click="countries.cancelAdd()" Отменить
+        button.add-country-btn.btn.btn-success.pull-right ng-click="countries.add()" Добавить
+    .clearfix
+
+    table.table.countries
+      tbody
+        tr ng-repeat="country in countries.all"
+          td ng-bind="country.name" ng-show="country.isShown()"
+          td ng-show="country.isEdited()"
+            input.form-control type="text" ng-model="countries.edited.name"
+          td
+            a.text-danger.pull-right href="" ng-click="countries.remove(country)" ng-show="country.isShown()"
+              span.glyphicon.glyphicon-remove
+              |  Удалить
+            a.edit-country.pull-right href="" ng-click="countries.edit(country)" ng-show="country.isShown()"
+              span.glyphicon.glyphicon-pencil
+              |  Редактировать
+
+            button.btn.btn-default.pull-right ng-click="countries.cancelEdit(country)" ng-show="country.isEdited()" Отменить
+            button.update-country.btn.btn-success.pull-right ng-click="countries.update(country)" ng-show="country.isEdited()" Сохранить
