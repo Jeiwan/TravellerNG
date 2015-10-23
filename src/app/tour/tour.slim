@@ -1,7 +1,7 @@
 .panel.panel-default.tour
   .panel-body
     h3
-      |{{ tour.countryFor(tour.self).name + ': ' + tour.self.title }}
+      span ng-bind="tour.self.country.name + ': ' + tour.self.title"
       strong.tour-price.label.label-success ng-bind="tour.self.price + ' ₽'"
     hr
     p {{ tour.self.text }}

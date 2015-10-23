@@ -1,15 +1,13 @@
 .row
   .col-xs-12
-    form.form-inline
-      label Подбор тура:
-      select.form-control.country-filter-select ng-model="tours.countryFilter" ng-options="country.id as country.name for country in tours.countries"
-      a.reset-filter-select href="" ng-show="tours.countryFilterApplied()" ng-click="tours.resetCountryFilter()" Сбросить
+    <tours-filter></tours-filter>
 
-.tour ng-repeat="tour in tours.all | filter:tours.filterByCountry"
+.tour ng-repeat="tour in tours.all | filter:toursFilter.filter"
   .panel.panel-default
     .panel-body
       h3
-        a ng-href="/#/tours/{{tour.id}}" {{ tours.countryFor(tour).name + ': ' + tour.title }}
+        a ng-href="/#/tours/{{tour.objectId}}" {{ tour.country.name + ': ' + tour.title }}
+        strong.tour-place.label.label-warning ng-bind="tour.place.name"
         strong.tour-price.label.label-success ng-bind="tour.price + ' ₽'"
       hr
       p {{ tours.limitedText(tour) }}

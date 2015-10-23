@@ -9,8 +9,12 @@ nav.navbar.navbar-default
         a href="/#/" Все туры
       li class="{{ navbar.isActive('CountriesController') }}"
         a href="/#/countries" Страны
+      li class="{{ navbar.isActive('PlacesController') }}"
+        a href="/#/places" Места
     ul.nav.navbar-nav.pull-right ng-show="navbar.currentUserIsAdmin()"
       li class="{{ navbar.isActive('AdminToursController') }}"
         a href="/#/admin/tours" Все туры
       li class="{{ navbar.isActive('AdminCountriesController') }}"
         a href="/#/admin/countries" Страны
+      li class="{{ navbar.isActive('AdminPlacesController') }}"
+        a href="/#/admin/places" Места
