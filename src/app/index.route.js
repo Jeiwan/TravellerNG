@@ -26,6 +26,12 @@ export function routerConfig ($routeProvider, $locationProvider) {
       controllerAs: 'countries',
       resolve: resolve
     })
+    .when('/places', {
+      templateUrl: 'app/places/places.html',
+      controller: 'PlacesController',
+      controllerAs: 'places',
+      resolve: resolve
+    })
     .when('/admin/tours', {
       templateUrl: 'app/admin/tours/tours.html',
       controller: 'AdminToursController',
@@ -37,6 +43,13 @@ export function routerConfig ($routeProvider, $locationProvider) {
       templateUrl: 'app/admin/countries/countries.html',
       controller: 'AdminCountriesController',
       controllerAs: 'countries',
+      restricted: true,
+      resolve: resolve
+    })
+    .when('/admin/places', {
+      templateUrl: 'app/admin/places/places.html',
+      controller: 'AdminPlacesController',
+      controllerAs: 'places',
       restricted: true,
       resolve: resolve
     })

@@ -1,25 +1,26 @@
 .row
-  .col-xs-6
-    form.form-inline
-      label Подбор тура:
-      select.form-control.country-filter-select ng-model="tours.countryFilter" ng-options="country.id as country.name for country in tours.countries"
-      a.reset-filter-select href="" ng-show="tours.countryFilterApplied()" ng-click="tours.resetCountryFilter()" Сбросить
-  .col-xs-6
-    a.btn.btn-primary.pull-right ng-disabled="tours.newFormVisible" ng-click="tours.showNewForm()"
+  .col-xs-8
+    <tours-filter></tours-filter>
+  .col-xs-4
+    a.btn.btn-primary.pull-right ng-disabled="tours.newFormVisible()" ng-click="tours.showNewForm()"
       span.glyphicon.glyphicon-plus
       |  Добавить новый тур
 
-form.new-tour-form ng-show="tours.newFormVisible"
+form.new-tour-form ng-show="tours.newFormVisible()"
   .form-group.row
-    .col-xs-2
+    .col-xs-4
       label.control-label Страна
-      select.form-control ng-model="tours.new_.countryId" ng-options="country.id as country.name for country in tours.countries"
-    .col-xs-8
-      label.control-label Название
-      input.form-control type="text" ng-model="tours.new_.title"
-    .col-xs-2
+      select.form-control ng-model="tours.new_.country.objectId" ng-options="country.objectId as country.name for country in tours.countries"
+    .col-xs-4
+      label.control-label Место
+      select.form-control ng-model="tours.new_.place.objectId" ng-options="place.objectId as place.name for place in tours.places"
+    .col-xs-4
       label.control-label Стоимость
       input.form-control type="number" ng-model="tours.new_.price"
+  .form-group.row
+    .col-xs-12
+      label.control-label Название
+      input.form-control type="text" ng-model="tours.new_.title"
   .form-group
     label.control-label Описание
     textarea.form-control rows="5" ng-model="tours.new_.text"
@@ -28,16 +29,17 @@ form.new-tour-form ng-show="tours.newFormVisible"
     button.new-tour-btn.btn.btn-info.pull-right ng-click="tours.add()" Добавить тур
 .clearfix
 
-.tour ng-repeat="tour in tours.all | filter:tours.filterByCountry"
-  .panel.panel-default ng-show="tour.state == 'show'"
+.tour ng-repeat="tour in tours.all | filter:toursFilter.filter"
+  .panel.panel-default ng-show="tour.isShown()"
     .panel-body
       h3
-        a ng-href="/#/tours/{{tour.id}}" {{ tours.countryFor(tour).name + ': ' + tour.title }}
+        a ng-href="/#/tours/{{tour.objectId}}" ng-bind="tour.country.name + ': ' + tour.title"
+        strong.tour-place.label.label-warning ng-bind="tour.place.name"
         strong.tour-price.label.label-success ng-bind="tour.price + ' ₽'"
       hr
       p {{ tour.text }}
     .panel-footer
-      a.text-danger.pull-right href="" ng-click="tours.remove(tour.id)"
+      a.text-danger.pull-right href="" ng-click="tours.remove(tour)"
         span.glyphicon.glyphicon-remove
         |  Удалить
       a.edit-tour.pull-right href="" ng-click="tours.edit(tour)"
@@ -47,12 +49,15 @@ form.new-tour-form ng-show="tours.newFormVisible"
 
   form.edit-tour-form ng-show="tour.state === 'edit'"
     .form-group.row
-      .col-xs-2
-        select.form-control ng-model="tours.edited.countryId" ng-options="country.id as country.name for country in tours.countries"
+      .col-xs-4
+        select.form-control ng-model="tours.edited.country.objectId" ng-options="country.objectId as country.name for country in tours.countries"
+      .col-xs-4
+        select.form-control ng-model="tours.edited.place.objectId" ng-options="place.objectId as place.name for place in tours.places"
+      .col-xs-4
+        input.form-control type="number" ng-model="tours.edited.price"
+    .form-group.row
       .col-xs-8
         input.form-control type="text" ng-model="tours.edited.title"
-      .col-xs-2
-        input.form-control type="number" ng-model="tours.edited.price"
     .form-group
       textarea.form-control rows="5" ng-model="tours.edited.text"
     .form-group

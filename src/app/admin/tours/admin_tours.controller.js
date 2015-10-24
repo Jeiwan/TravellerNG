@@ -1,125 +1,143 @@
-export function AdminToursController(ToursService, CountriesService) {
+export function AdminToursController(ToursService, CountriesService, PlacesService) {
   'ngInject';
   var tours = this;
 
-  this.all = ToursService.read();
-  this.countries = CountriesService.read();
-
-  this.newFormVisible = false;
-  this.new_ = ToursService.newTour();
-  this.edited = ToursService.newTour();
+  this.state = {
+    newForm: { visible: false }
+  };
+  this.new_ = { country: {}, place: {} };
+  this.edited = { country: {}, place: {} };
   this.countryFilter = null;
+  this.countries = [];
+  this.places = [];
 
   this.add = add;
   this.remove = remove;
+  this.newFormVisible = newFormVisible;
   this.showNewForm = showNewForm;
   this.hideNewForm = hideNewForm;
   this.edit = edit;
   this.cancelEdit = cancelEdit;
   this.update = update;
-  this.countryFor = ToursService.countryFor;
-  this.filterByCountry = filterByCountry;
-  this.countryFilterApplied = countryFilterApplied;
-  this.resetCountryFilter = resetCountryFilter;
 
   activate();
 
   function activate() {
-    tours.all = ToursService.read();
+    tours.all = ToursService.query();
+    CountriesService.all().$promise.then(result => {
+      tours.countries = result;
+      tours.new_.country.objectId = result[0].objectId;
+    });
+    PlacesService.query().$promise.then(result => {
+      tours.places = result;
+      tours.new_.place.objectId = result[0].objectId;
+    });
   }
 
   // Добавление тура в список
   function add() {
-    if (ToursService.create(
-          this.new_.title,
-          this.new_.countryId,
-          this.new_.text,
-          this.new_.price
-    )) {
-      this.new_ = ToursService.newTour();
+    tours.new_.country.name = tours.countries.find(c => {
+      return c.objectId === tours.new_.country.objectId;
+    }).name;
+    tours.new_.place.name = tours.places.find(p => {
+      return p.objectId === tours.new_.place.objectId;
+    }).name;
+
+    ToursService.create(tours.new_).$promise.then(result => {
+      tours.all.push(angular.extend(result, tours.new_));
+      tours.new_ = {};
       tours.hideNewForm();
-
-      return true;
-    } else {
-      alert('Ошибка валидации');
-
-      return false;
-    }
+    }).catch(error => {
+      alert('Ошибка создания тура:', error.data.error);
+    });
   }
 
   // Удаление тура из списка
-  function remove(id) {
-    if (ToursService.destroy(id)) {
-      tours.all = ToursService.read();
-      return true;
-    } else {
-      alert('Тур не найден');
-
-      return false;
-    }
+  function remove(tour) {
+    ToursService.destroy({objectId: tour.objectId}).$promise.then(result => {
+      tours.all = tours.all.filter(t => {
+        return tour.objectId !== t.objectId;
+      });
+    }).catch(error => {
+      alert('Ошибка удаления тура:', error.data.error);
+    });
   }
 
   // Показать форму добавления нового тура
   function showNewForm() {
-    tours.newFormVisible = true;
-
-    return true;
+    tours.state.newForm.visible = true;
   }
 
   // Спрятать форму добавления нового тура
   function hideNewForm() {
-    tours.newFormVisible = false;
-
-    return true;
+    tours.state.newForm.visible = false;
   }
 
   // Показать форму редактирования тура
   function edit(tour) {
     tours.all.forEach((t) => { t.show(); });
-
-    for (var k in tour) {
-      tours.edited[k] = tour[k];
-    }
-
+    tours.edited = angular.copy(tour);
+    tours.edited.country.objectId = tour.country.objectId;
+    tours.edited.place.objectId = tour.place.objectId;
     tour.edit();
-
-    return true;
   }
 
   // Отменить редактирование тура
   function cancelEdit(tour) {
     tour.show();
-    this.edited = ToursService.newTour();
-
-    return true;
+    this.edited = {};
   }
 
   // Сохранить изменения после редактирования тура
   function update(tour) {
-    if (ToursService.update(tour.id, tours.edited)) {
-      tour.show();
-      this.edited = ToursService.newTour();
-
-      return true;
-    } else {
+    if (!validate(tours.edited)) {
       alert('Ошибка валидации');
-
       return false;
     }
+
+    tours.edited.country.name = tours.countries.find(c => {
+      return c.objectId === tours.edited.country.objectId;
+    }).name;
+
+    tours.edited.place.name = tours.places.find(p => {
+      return p.objectId === tours.edited.place.objectId;
+    }).name;
+
+    ToursService.update(tours.edited).$promise.then(response => {
+      response.country = tours.edited.country;
+      response.place = tours.edited.place;
+      response.objectId = tour.objectId;
+      angular.copy(response, tour);
+      tours.edited = {};
+      tour.show();
+    }).catch(error => {
+      alert('Ошибка обновления страны: ', error.data.error);
+    });
   }
 
-  // Фильтрация туров по стране
-  function filterByCountry(value, index, array) {
-    return tours.countryFilter === null || value.countryId == parseInt(tours.countryFilter, 10);
+  function newFormVisible() {
+    return tours.state.newForm.visible === true;
   }
 
-  function countryFilterApplied() {
-    return tours.countryFilter !== null;
-  }
+  function validate(tour) {
+    var validations = [
+      validateTitle,
+      validateText,
+      validatePrice
+    ];
 
-  function resetCountryFilter() {
-    tours.countryFilter = null;
+    return validations.every((v) => v.apply(tour));
 
-    return true;
-  }
+    function validateTitle() {
+      return typeof this.title !== 'undefined' && this.title.length > 3;
+    };
+
+    function validateText() {
+      return typeof this.text !== 'undefined' && this.text.length > 3;
+    }
+
+    function validatePrice() {
+      return typeof this.price !== 'undefined' && parseFloat(this.price, 10) > 0;
+    }
+  };
 }
