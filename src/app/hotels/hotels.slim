@@ -1,0 +1,8 @@
+.row
+  .col-md-6
+    table.table
+      tbody
+        tr ng-repeat="hotel in hotels.all"
+          td ng-bind="hotel.title"
+          td
+            span.rating-star.glyphicon ng-class="hotels.ratingStars(n)" ng-repeat="n in hotel.starsArray() track by $index"

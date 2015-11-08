@@ -6,15 +6,19 @@ nav.navbar.navbar-default
         |  TravellerNG
     ul.nav.navbar-nav
       li class="{{ navbar.isActive('ToursController') }}"
-        a href="/#/" Все туры
+        a href="/#/" Туры
       li class="{{ navbar.isActive('CountriesController') }}"
         a href="/#/countries" Страны
       li class="{{ navbar.isActive('PlacesController') }}"
         a href="/#/places" Места
+      li class="{{ navbar.isActive('HotelsController') }}"
+        a href="/#/hotels" Гостиницы
     ul.nav.navbar-nav.pull-right ng-show="navbar.currentUserIsAdmin()"
       li class="{{ navbar.isActive('AdminToursController') }}"
-        a href="/#/admin/tours" Все туры
+        a href="/#/admin/tours" Туры
       li class="{{ navbar.isActive('AdminCountriesController') }}"
         a href="/#/admin/countries" Страны
       li class="{{ navbar.isActive('AdminPlacesController') }}"
         a href="/#/admin/places" Места
+      li class="{{ navbar.isActive('AdminHotelsController') }}"
+        a href="/#/admin/hotels" Гостиницы

@@ -13,14 +13,17 @@ form.new-tour-form ng-show="tours.newFormVisible()"
       select.form-control ng-model="tours.new_.country.objectId" ng-options="country.objectId as country.name for country in tours.countries"
     .col-xs-4
       label.control-label Место
-      select.form-control ng-model="tours.new_.place.objectId" ng-options="place.objectId as place.name for place in tours.places"
+      select.form-control ng-model="tours.new_.place.objectId" ng-options="place.objectId as place.name for place in tours.possiblePlaces(tours.new_)" ng-enable="tours.new_.country"
     .col-xs-4
-      label.control-label Стоимость
-      input.form-control type="number" ng-model="tours.new_.price"
+      label.control-label Гостиница
+      select.form-control ng-model="tours.new_.hotel.objectId" ng-options="hotel.objectId as hotel.title for hotel in tours.possibleHotels(tours.new_)" ng-enable="tours.new_.place"
   .form-group.row
-    .col-xs-12
+    .col-xs-10
       label.control-label Название
       input.form-control type="text" ng-model="tours.new_.title"
+    .col-xs-2
+      label.control-label Стоимость
+      input.form-control type="number" ng-model="tours.new_.price"
   .form-group
     label.control-label Описание
     textarea.form-control rows="5" ng-model="tours.new_.text"
@@ -36,6 +39,8 @@ form.new-tour-form ng-show="tours.newFormVisible()"
         a ng-href="/#/tours/{{tour.objectId}}" ng-bind="tour.country.name + ': ' + tour.title"
         strong.tour-place.label.label-warning ng-bind="tour.place.name"
         strong.tour-price.label.label-success ng-bind="tour.price + ' ₽'"
+        br
+        strong.tour-hotel ng-bind="tour.hotel.title"
       hr
       p {{ tour.text }}
     .panel-footer
@@ -52,12 +57,14 @@ form.new-tour-form ng-show="tours.newFormVisible()"
       .col-xs-4
         select.form-control ng-model="tours.edited.country.objectId" ng-options="country.objectId as country.name for country in tours.countries"
       .col-xs-4
-        select.form-control ng-model="tours.edited.place.objectId" ng-options="place.objectId as place.name for place in tours.places"
+        select.form-control ng-model="tours.edited.place.objectId" ng-options="place.objectId as place.name for place in tours.possiblePlaces(tours.edited)"
       .col-xs-4
-        input.form-control type="number" ng-model="tours.edited.price"
+        select.form-control ng-model="tours.edited.hotel.objectId" ng-options="hotel.objectId as hotel.title for hotel in tours.possibleHotels(tours.edited)"
     .form-group.row
       .col-xs-8
         input.form-control type="text" ng-model="tours.edited.title"
+      .col-xs-4
+        input.form-control type="number" ng-model="tours.edited.price"
     .form-group
       textarea.form-control rows="5" ng-model="tours.edited.text"
     .form-group

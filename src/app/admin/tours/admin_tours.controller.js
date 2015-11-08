@@ -1,12 +1,12 @@
-export function AdminToursController(ToursService, CountriesService, PlacesService) {
+export function AdminToursController(ToursService, CountriesService, PlacesService, HotelsService, $q) {
   'ngInject';
   var tours = this;
 
   this.state = {
     newForm: { visible: false }
   };
-  this.new_ = { country: {}, place: {} };
-  this.edited = { country: {}, place: {} };
+  this.new_ = emptyTour();
+  this.edited = emptyTour();
   this.countryFilter = null;
   this.countries = [];
   this.places = [];
@@ -19,18 +19,31 @@ export function AdminToursController(ToursService, CountriesService, PlacesServi
   this.edit = edit;
   this.cancelEdit = cancelEdit;
   this.update = update;
+  this.possibleHotels = possibleHotels;
+  this.possiblePlaces = possiblePlaces;
 
   activate();
 
   function activate() {
     tours.all = ToursService.query();
-    CountriesService.all().$promise.then(result => {
-      tours.countries = result;
-      tours.new_.country.objectId = result[0].objectId;
-    });
-    PlacesService.query().$promise.then(result => {
-      tours.places = result;
-      tours.new_.place.objectId = result[0].objectId;
+
+    $q.all([
+      CountriesService.all().$promise,
+      PlacesService.query().$promise,
+      HotelsService.query().$promise
+    ]).then(results => {
+      var countries = results[0],
+          places = results[1],
+          hotels = results[2];
+
+      tours.countries = countries;
+      tours.new_.country.objectId = countries[0].objectId;
+
+      tours.places = places;
+      tours.new_.place.objectId = places[0].objectId;
+
+      tours.hotels = hotels;
+      tours.new_.hotel.objectId = hotels[0].objectId;
     });
   }
 
@@ -42,10 +55,13 @@ export function AdminToursController(ToursService, CountriesService, PlacesServi
     tours.new_.place.name = tours.places.find(p => {
       return p.objectId === tours.new_.place.objectId;
     }).name;
+    tours.new_.hotel.title = tours.hotels.find(h => {
+      return h.objectId === tours.new_.hotel.objectId;
+    }).title;
 
     ToursService.create(tours.new_).$promise.then(result => {
       tours.all.push(angular.extend(result, tours.new_));
-      tours.new_ = {};
+      this.new_ = emptyTour();
       tours.hideNewForm();
     }).catch(error => {
       alert('Ошибка создания тура:', error.data.error);
@@ -103,12 +119,13 @@ export function AdminToursController(ToursService, CountriesService, PlacesServi
       return p.objectId === tours.edited.place.objectId;
     }).name;
 
+    tours.edited.hotel.title = tours.hotels.find(h => {
+      return h.objectId === tours.edited.hotel.objectId;
+    }).title;
+
     ToursService.update(tours.edited).$promise.then(response => {
-      response.country = tours.edited.country;
-      response.place = tours.edited.place;
-      response.objectId = tour.objectId;
-      angular.copy(response, tour);
-      tours.edited = {};
+      angular.extend(tour, tours.edited);
+      this.edited = emptyTour();
       tour.show();
     }).catch(error => {
       alert('Ошибка обновления страны: ', error.data.error);
@@ -117,6 +134,22 @@ export function AdminToursController(ToursService, CountriesService, PlacesServi
 
   function newFormVisible() {
     return tours.state.newForm.visible === true;
+  }
+
+  function possibleHotels(tour) {
+    if (typeof tours.hotels === 'undefined') {
+      return [];
+    }
+
+    return tours.hotels.filter(h => h.place.objectId === tour.place.objectId);
+  }
+
+  function possiblePlaces(tour) {
+    if (typeof tours.places === 'undefined') {
+      return [];
+    }
+
+    return tours.places.filter(h => h.country.objectId === tour.country.objectId);
   }
 
   function validate(tour) {
@@ -139,5 +172,9 @@ export function AdminToursController(ToursService, CountriesService, PlacesServi
     function validatePrice() {
       return typeof this.price !== 'undefined' && parseFloat(this.price, 10) > 0;
     }
-  };
+  }
+
+  function emptyTour() {
+    return { country: {}, place: {}, hotel: {} };
+  }
 }

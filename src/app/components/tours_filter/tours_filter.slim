@@ -1,5 +1,6 @@
 form.form-inline
   label Подбор тура:
   select.form-control.country-filter-select ng-model="toursFilter.countryFilter" ng-options="country as country for country in toursFilter.availableCountries()"
-  select.form-control.country-filter-select ng-model="toursFilter.placeFilter" ng-options="country as country for country in toursFilter.availablePlaces()"
+  select.form-control.country-filter-select ng-model="toursFilter.placeFilter" ng-options="place as place for place in toursFilter.availablePlaces()"
+  select.form-control.country-filter-select ng-model="toursFilter.hotelFilter" ng-options="hotel as hotel for hotel in toursFilter.availableHotels()"
   a.reset-filter-select href="" ng-show="toursFilter.filterApplied()" ng-click="toursFilter.resetFilters()" Сбросить
