@@ -1,16 +1,18 @@
-export function ToursFilter(ToursService, CountriesService) {
+export function ToursFilter(ToursService, CountriesService, HotelsService) {
   'ngInject';
   function controller() {
     var toursFilter = this;
 
     this.countryFilter = null;
     this.placeFilter = null;
+    this.hotelFilter = null;
 
     this.filter = filter;
     this.filterApplied = filterApplied;
     this.resetFilters = resetFilters;
     this.availableCountries = availableCountries;
     this.availablePlaces = availablePlaces;
+    this.availableHotels = availableHotels;
 
     activate();
 
@@ -20,16 +22,18 @@ export function ToursFilter(ToursService, CountriesService) {
 
     function filter(value, index, array) {
       return (toursFilter.countryFilter === null || value.country.name == toursFilter.countryFilter) &&
-        (toursFilter.placeFilter === null || value.place.name === toursFilter.placeFilter);
+        (toursFilter.placeFilter === null || value.place.name === toursFilter.placeFilter) &&
+        (toursFilter.hotelFilter === null || value.hotel.title === toursFilter.hotelFilter);
     }
 
     function filterApplied() {
-      return toursFilter.countryFilter !== null || toursFilter.placeFilter !== null;
+      return toursFilter.countryFilter !== null || toursFilter.placeFilter !== null || toursFilter.hotelFilter !== null;
     }
 
     function resetFilters() {
       toursFilter.countryFilter = null;
       toursFilter.placeFilter = null;
+      toursFilter.hotelFilter = null;
     }
 
     function availableCountries() {
@@ -45,7 +49,13 @@ export function ToursFilter(ToursService, CountriesService) {
     }
 
     function availablePlaces() {
-      var places = toursFilter.all.map(tour => {
+      var tours = toursFilter.all;
+
+      if (toursFilter.countryFilter !== null) {
+        tours = tours.filter(tour => tour.country.name === toursFilter.countryFilter);
+      }
+
+      var places = tours.map(tour => {
         return tour.place.name;
       });
 
@@ -54,6 +64,27 @@ export function ToursFilter(ToursService, CountriesService) {
       }
 
       return places.filter(uniques);
+    }
+
+    function availableHotels() {
+      var tours = toursFilter.all,
+          hotels;
+
+      if (toursFilter.countryFilter !== null) {
+        tours = tours.filter(tour => tour.country.name === toursFilter.countryFilter);
+      }
+
+      if (toursFilter.placeFilter !== null) {
+        tours = tours.filter(tour => tour.place.name === toursFilter.placeFilter);
+      }
+
+      hotels = tours.map(tour => tour.hotel.title);
+
+      function uniques(value, index, self) {
+        return self.indexOf(value) === index;
+      }
+
+      return hotels.filter(uniques);
     }
   }
 

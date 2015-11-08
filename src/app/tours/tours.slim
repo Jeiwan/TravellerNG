@@ -9,5 +9,7 @@
         a ng-href="/#/tours/{{tour.objectId}}" {{ tour.country.name + ': ' + tour.title }}
         strong.tour-place.label.label-warning ng-bind="tour.place.name"
         strong.tour-price.label.label-success ng-bind="tour.price + ' ₽'"
+        br
+        strong.tour-hotel ng-bind="tour.hotel.title"
       hr
       p {{ tours.limitedText(tour) }}

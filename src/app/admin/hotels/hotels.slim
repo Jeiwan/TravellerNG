@@ -1,0 +1,39 @@
+a.btn.btn-primary.pull-right ng-hide="hotels.state.newForm.visible" ng-click="hotels.showNewForm()"
+  span.glyphicon.glyphicon-plus
+  |  Добавить гостиницу
+form.new-hotel-tour.row ng-show="hotels.state.newForm.visible"
+  .col-xs-3
+    select.form-control ng-model="hotels.new_.place.objectId" ng-options="place.objectId as place.name for place in hotels.places"
+  .col-xs-3
+    input.form-control ng-model="hotels.new_.title"
+  .col-xs-1
+    select.form-control ng-model="hotels.new_.stars" ng-options="n as n for n in [1, 2, 3, 4, 5]"
+
+  .col-xs-5
+    button.btn.btn-default.pull-right ng-click="hotels.cancelAdd()" Отменить
+    button.add-hotel-btn.btn.btn-success.pull-right ng-click="hotels.add()" Добавить
+.clearfix
+
+table.table.hotels
+  tbody
+    tr ng-repeat="hotel in hotels.all"
+      td ng-bind="hotel.place.name" ng-show="hotel.isShown()"
+      td ng-bind="hotel.title" ng-show="hotel.isShown()"
+      td ng-show="hotel.isShown()"
+        span.rating-star.glyphicon ng-class="hotels.ratingStars(n)" ng-repeat="n in hotel.starsArray() track by $index"
+      td ng-show="hotel.isEdited()"
+        select.form-control ng-model="hotels.edited.place.objectId" ng-options="place.objectId as place.name for place in hotels.places"
+      td ng-show="hotel.isEdited()"
+        input.form-control type="text" ng-model="hotels.edited.title"
+      td ng-show="hotel.isEdited()"
+        select.form-control ng-model="hotels.edited.stars" ng-options="n as n for n in [1, 2, 3, 4, 5]"
+      td
+        a.text-danger.pull-right href="" ng-click="hotels.remove(hotel)" ng-show="hotel.isShown()"
+          span.glyphicon.glyphicon-remove
+          |  Удалить
+        a.edit-hotel.pull-right href="" ng-click="hotels.edit(hotel)" ng-show="hotel.isShown()"
+          span.glyphicon.glyphicon-pencil
+          |  Редактировать
+
+        button.btn.btn-default.pull-right ng-click="hotels.cancelEdit(hotel)" ng-show="hotel.isEdited()" Отменить
+        button.update-hotel.btn.btn-success.pull-right ng-click="hotels.update(hotel)" ng-show="hotel.isEdited()" Сохранить

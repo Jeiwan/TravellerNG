@@ -20,6 +20,5 @@ gulp.task('markups', function() {
       console.log('' + e);
       this.emit('end');
     })
-    .pipe(gulp.dest(path.join(conf.paths.tmp, '/serve/app/')))
-    .pipe(browserSync.reload({ stream: true }));
+    .pipe(gulp.dest(path.join(conf.paths.tmp, '/serve/app/')));
 });
