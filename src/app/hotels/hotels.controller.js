@@ -3,6 +3,7 @@ export function HotelsController(HotelsService) {
   var hotels = this;
 
   this.ratingStars = ratingStars;
+  this.starsArray = starsArray;
 
   activate();
 
@@ -12,5 +13,19 @@ export function HotelsController(HotelsService) {
 
   function ratingStars(n) {
     return 'glyphicon-star' + (n == 0 ? '-empty' : '');
+  }
+
+  function starsArray(hotel) {
+    var array = [];
+
+    for (var i = 0; i < 5; i++) {
+      if (i < hotel.stars) {
+        array.push(1);
+      } else {
+        array.push(0);
+      }
+    }
+
+    return array;
   }
 }

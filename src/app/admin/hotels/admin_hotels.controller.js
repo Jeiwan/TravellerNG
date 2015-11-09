@@ -1,4 +1,4 @@
-export function AdminHotelsController(HotelsService, PlacesService) {
+export function AdminHotelsController(HotelsService, PlacesService, $q) {
   'ngInject';
   var hotels = this;
 
@@ -6,8 +6,9 @@ export function AdminHotelsController(HotelsService, PlacesService) {
     newForm: { visible: false }
   };
 
-  this.edited = {};
-  this.new_ = { place: {} };
+  this.edited = emptyHotel();
+  this.new_ = emptyHotel();
+  this.places = [];
 
   this.add = add;
   this.remove = remove;
@@ -22,8 +23,17 @@ export function AdminHotelsController(HotelsService, PlacesService) {
   activate();
 
   function activate() {
-    hotels.all = HotelsService.query();
-    hotels.places = PlacesService.query();
+    $q.all([
+      HotelsService.query().$promise,
+      PlacesService.query().$promise
+    ]).then(results => {
+      var hotelsResult = results[0],
+          places = results[1];
+
+      hotels.all = hotelsResult;
+      hotels.places = places;
+      hotels.new_.place.objectId = places[0].objectId;
+    });
   }
 
   function add() {
@@ -38,7 +48,7 @@ export function AdminHotelsController(HotelsService, PlacesService) {
 
     HotelsService.create(hotels.new_).$promise.then(result => {
       hotels.all.push(angular.extend(result, hotels.new_));
-      hotels.new_ = {};
+      hotels.new_ = emptyHotel();
       hideNewForm();
     }).catch(error => {
       alert('Ошибка создания гостиницы:', error.data.error);
@@ -46,7 +56,7 @@ export function AdminHotelsController(HotelsService, PlacesService) {
   }
 
   function remove(hotel) {
-    HotelsService.destroy({objectId: hotel.objectId}).$promise.then(result => {
+    HotelsService.destroy({objectId: hotel.objectId}).$promise.then(() => {
       hotels.all = hotels.all.filter(c => {
         return hotel.objectId !== c.objectId;
       });
@@ -58,11 +68,12 @@ export function AdminHotelsController(HotelsService, PlacesService) {
   function edit(hotel) {
     hotels.all.forEach((c) => { c.show(); });
     hotels.edited = angular.copy(hotel);
+    hotels.edited.place.objectId = hotel.place.objectId;
     hotel.edit();
   }
 
   function cancelEdit(hotel) {
-    hotels.edited = {};
+    hotels.edited = emptyHotel();
     hotel.show();
   }
 
@@ -76,10 +87,10 @@ export function AdminHotelsController(HotelsService, PlacesService) {
       return p.objectId === hotels.edited.place.objectId;
     }).name;
 
-    HotelsService.update(hotels.edited).$promise.then(response => {
-      angular.extend(hotel, response);
+    HotelsService.update(hotels.edited).$promise.then(() => {
+      angular.extend(hotel, hotels.edited);
       hotel.place = hotels.edited.place;
-      hotels.edited = {};
+      hotels.edited = emptyHotel();
       hotel.show();
     }).catch(error => {
       alert('Ошибка обновления гостиницы: ', error.data.error);
@@ -115,11 +126,15 @@ export function AdminHotelsController(HotelsService, PlacesService) {
     return validations.every((v) => v.apply(hotel));
 
     function validateTitle() {
-      return this.title !== 'undefined' && this.title.length >= 3;
+      return typeof this.title !== 'undefined' && this.title.length >= 3;
     }
 
     function validateStars() {
-      return this.stars !== 'undefined' && this.stars > 0 && this.stars <= 5;
+      return typeof this.stars !== 'undefined' && this.stars > 0 && this.stars <= 5;
     }
+  }
+
+  function emptyHotel() {
+    return { place: {} };
   }
 }

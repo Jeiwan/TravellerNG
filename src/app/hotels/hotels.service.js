@@ -1,6 +1,5 @@
 export function HotelsService($resource) {
   'ngInject';
-  var that = this;
 
   var parseQueryResult = function(response) {
     return angular.fromJson(response).results;

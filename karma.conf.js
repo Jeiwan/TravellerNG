@@ -34,7 +34,7 @@ module.exports = function(config) {
     autoWatch: false,
 
     ngHtml2JsPreprocessor: {
-      stripPrefix: conf.paths.src + '/',
+      stripPrefix: '.tmp/serve/',
       moduleName: 'TravellerNG'
     },
 
@@ -42,10 +42,11 @@ module.exports = function(config) {
 
     frameworks: ['jasmine'],
 
-    browsers : ['PhantomJS'],
+    browsers : ['Chrome'],
 
     plugins : [
-      'karma-phantomjs-launcher',
+      //'karma-phantomjs-launcher',
+      'karma-chrome-launcher',
       'karma-coverage',
       'karma-jasmine',
       'karma-ng-html2js-preprocessor'
@@ -56,7 +57,7 @@ module.exports = function(config) {
       dir : 'coverage/'
     },
 
-    reporters: ['progress']
+    reporters: ['dot', 'progress', 'coverage']
   };
 
   // This is the default preprocessors configuration for a usage with Karma cli

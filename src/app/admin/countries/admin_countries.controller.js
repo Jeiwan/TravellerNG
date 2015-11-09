@@ -16,7 +16,6 @@ export function AdminCountriesController(CountriesService) {
   this.update = update;
   this.showNewForm = showNewForm;
   this.hideNewForm = hideNewForm;
-  this.cancelAdd = cancelAdd;
 
   activate();
 
@@ -40,7 +39,7 @@ export function AdminCountriesController(CountriesService) {
   }
 
   function remove(country) {
-    CountriesService.destroy({objectId: country.objectId}).$promise.then(result => {
+    CountriesService.destroy({objectId: country.objectId}).$promise.then(() => {
       countries.all = countries.all.filter(c => {
         return country.objectId !== c.objectId;
       });
@@ -66,7 +65,7 @@ export function AdminCountriesController(CountriesService) {
       return false;
     }
 
-    CountriesService.update({ objectId: country.objectId, name: countries.edited.name }).$promise.then(response => {
+    CountriesService.update({ objectId: country.objectId, name: countries.edited.name }).$promise.then(() => {
       country.name = countries.edited.name;
       countries.edited = {};
       country.show();
@@ -77,21 +76,10 @@ export function AdminCountriesController(CountriesService) {
 
   function showNewForm() {
     countries.state.newForm.visible = true;
-
-    return true;
   }
 
   function hideNewForm() {
     countries.state.newForm.visible = false;
-
-    return true;
-  }
-
-  function cancelAdd() {
-    countries.new_ = {};
-    hideNewForm();
-
-    return true;
   }
 
   function validate(country) {

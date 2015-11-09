@@ -5,12 +5,36 @@ export function PlacesService($resource) {
     return angular.fromJson(response).results;
   };
 
+  var prepareRelations = function(request) {
+    request.country.__type = 'Pointer';
+    request.country.className = 'Country';
+
+    return angular.toJson(request);
+  };
+
+  var prepareUpdateRequest = function(request) {
+    request = angular.fromJson(prepareRelations(request));
+
+    delete request.state;
+
+    return angular.toJson(request);
+  };
+
+  var prepareSaveRequest = function(request) {
+    request = angular.fromJson(prepareRelations(request));
+
+    delete request.state;
+
+    return angular.toJson(request);
+  };
+
   var Place = $resource(
     'https://api.parse.com/1/classes/Place/:objectId',
-    { objectId: '@objectId' },
+    { objectId: '@objectId', include: 'country' },
     {
       query: { transformResponse: parseQueryResult, isArray: true },
-      update: { method: 'PUT' }
+      update: { method: 'PUT', transformRequest: prepareUpdateRequest },
+      save: { method: 'POST', transformRequest: prepareSaveRequest }
     }
   );
 
@@ -27,7 +51,7 @@ export function PlacesService($resource) {
     },
     isEdited() {
       return this.state === 'edit';
-    },
+    }
   });
 
   var service = {

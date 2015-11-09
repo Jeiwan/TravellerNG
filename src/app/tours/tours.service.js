@@ -1,6 +1,5 @@
 export function ToursService(CountriesService, $resource) {
   'ngInject';
-  var that = this;
 
   var parseQueryResult = function(response) {
     return angular.fromJson(response).results;
@@ -30,7 +29,7 @@ export function ToursService(CountriesService, $resource) {
 
     delete request.state;
 
-    return request;
+    return angular.toJson(request);
   };
 
   var Tour = $resource(
@@ -56,7 +55,7 @@ export function ToursService(CountriesService, $resource) {
     },
     isEdited() {
       return this.state === 'edit';
-    },
+    }
   });
 
   var service = {
