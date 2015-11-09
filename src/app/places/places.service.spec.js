@@ -81,7 +81,7 @@ describe('PlacesService', function() {
       $httpBackend.whenPOST(url).respond(200);
       $httpBackend.expectPOST(url).respond(200);
 
-      PlacesService.create(newPlace);
+      PlacesService.save(newPlace);
 
       expect($httpBackend.verifyNoOutstandingExpectation).not.toThrow();
     });
@@ -89,7 +89,7 @@ describe('PlacesService', function() {
     it('returns objectId and createdAt', () => {
       $httpBackend.whenPOST(url).respond(200, {createdAt: '2015-11-08T05:30:06.265Z', objectId: '3'});
 
-      var response = PlacesService.create(newPlace);
+      var response = PlacesService.save(newPlace);
       $httpBackend.flush();
 
       expect(response.objectId).toEqual('3');
@@ -121,12 +121,12 @@ describe('PlacesService', function() {
     });
   });
 
-  describe('destroy', () => {
+  describe('remove', () => {
     it('sends request to Parse.com', () => {
       $httpBackend.whenDELETE(url).respond(200);
       $httpBackend.expectDELETE(url).respond(200);
 
-      PlacesService.destroy({objectId: fakePlaces[0].objectId});
+      PlacesService.remove({objectId: fakePlaces[0].objectId});
 
       expect($httpBackend.verifyNoOutstandingExpectation).not.toThrow();
     });

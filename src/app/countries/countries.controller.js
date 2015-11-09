@@ -5,6 +5,6 @@ export function CountriesController(CountriesService) {
   activate();
 
   function activate() {
-    countries.all = CountriesService.all();
+    countries.all = CountriesService.query();
   }
 }

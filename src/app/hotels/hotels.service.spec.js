@@ -86,7 +86,7 @@ describe('HotelsService', function() {
       $httpBackend.whenPOST(url).respond(200);
       $httpBackend.expectPOST(url).respond(200);
 
-      HotelsService.create(newHotel);
+      HotelsService.save(newHotel);
 
       expect($httpBackend.verifyNoOutstandingExpectation).not.toThrow();
     });
@@ -94,7 +94,7 @@ describe('HotelsService', function() {
     it('returns objectId and createdAt', () => {
       $httpBackend.whenPOST(url).respond(200, {createdAt: '2015-11-08T05:30:06.265Z', objectId: '3'});
 
-      var response = HotelsService.create(newHotel);
+      var response = HotelsService.save(newHotel);
       $httpBackend.flush();
 
       expect(response.objectId).toEqual('3');
@@ -127,12 +127,12 @@ describe('HotelsService', function() {
     });
   });
 
-  describe('destroy', () => {
+  describe('remove', () => {
     it('sends request to Parse.com', () => {
       $httpBackend.whenDELETE(url).respond(200);
       $httpBackend.expectDELETE(url).respond(200);
 
-      HotelsService.destroy({objectId: fakeHotels[0].objectId});
+      HotelsService.remove({objectId: fakeHotels[0].objectId});
 
       expect($httpBackend.verifyNoOutstandingExpectation).not.toThrow();
     });

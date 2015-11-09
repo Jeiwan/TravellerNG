@@ -46,7 +46,7 @@ export function AdminHotelsController(HotelsService, PlacesService, $q) {
       return p.objectId === hotels.new_.place.objectId;
     }).name;
 
-    HotelsService.create(hotels.new_).$promise.then(result => {
+    HotelsService.save(hotels.new_).$promise.then(result => {
       hotels.all.push(angular.extend(result, hotels.new_));
       hotels.new_ = emptyHotel();
       hideNewForm();
@@ -56,7 +56,7 @@ export function AdminHotelsController(HotelsService, PlacesService, $q) {
   }
 
   function remove(hotel) {
-    HotelsService.destroy({objectId: hotel.objectId}).$promise.then(() => {
+    HotelsService.remove({objectId: hotel.objectId}).$promise.then(() => {
       hotels.all = hotels.all.filter(c => {
         return hotel.objectId !== c.objectId;
       });
