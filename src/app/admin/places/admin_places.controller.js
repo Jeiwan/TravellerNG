@@ -1,4 +1,4 @@
-export function AdminPlacesController(PlacesService) {
+export function AdminPlacesController(PlacesService, CountriesService, $q) {
   'ngInject';
   var places = this;
 
@@ -6,8 +6,9 @@ export function AdminPlacesController(PlacesService) {
     newForm: { visible: false }
   };
 
-  this.edited = {};
-  this.new_ = {};
+  this.edited = emptyPlace();
+  this.new_ = emptyPlace();
+  this.countries = [];
 
   this.add = add;
   this.remove = remove;
@@ -16,12 +17,21 @@ export function AdminPlacesController(PlacesService) {
   this.update = update;
   this.showNewForm = showNewForm;
   this.hideNewForm = hideNewForm;
-  this.cancelAdd = cancelAdd;
 
   activate();
 
   function activate() {
-    places.all = PlacesService.query();
+    $q.all([
+      PlacesService.query().$promise,
+      CountriesService.all().$promise
+    ]).then((results) => {
+      var placesResult = results[0],
+          countries = results[1];
+
+      places.all = placesResult;
+      places.countries = countries;
+      places.new_.country.objectId = countries[0].objectId;
+    });
   }
 
   function add() {
@@ -30,9 +40,13 @@ export function AdminPlacesController(PlacesService) {
       return false;
     }
 
+    places.new_.country.name = places.countries.find(c => {
+      return c.objectId === places.new_.country.objectId;
+    }).name;
+
     PlacesService.create(places.new_).$promise.then(result => {
       places.all.push(angular.extend(result, places.new_));
-      places.new_ = {};
+      places.new_ = emptyPlace();
       hideNewForm();
     }).catch(error => {
       alert('Ошибка создания места:', error.data.error);
@@ -40,7 +54,7 @@ export function AdminPlacesController(PlacesService) {
   }
 
   function remove(place) {
-    PlacesService.destroy({objectId: place.objectId}).$promise.then(result => {
+    PlacesService.destroy({objectId: place.objectId}).$promise.then(() => {
       places.all = places.all.filter(c => {
         return place.objectId !== c.objectId;
       });
@@ -50,13 +64,13 @@ export function AdminPlacesController(PlacesService) {
   }
 
   function edit(place) {
-    places.all.forEach((c) => { c.show(); });
-    places.edited = angular.copy(place);
+    places.all.forEach((p) => { p.show(); });
+    angular.copy(place, places.edited);
     place.edit();
   }
 
   function cancelEdit(place) {
-    places.edited = {};
+    places.edited = emptyPlace();
     place.show();
   }
 
@@ -66,9 +80,13 @@ export function AdminPlacesController(PlacesService) {
       return false;
     }
 
-    PlacesService.update({ objectId: place.objectId, name: places.edited.name }).$promise.then(response => {
-      place.name = places.edited.name;
-      places.edited = {};
+    places.edited.country.name = places.countries.find(c => {
+      return c.objectId === places.edited.country.objectId;
+    }).name;
+
+    PlacesService.update(places.edited).$promise.then(() => {
+      angular.copy(places.edited, place);
+      places.edited = emptyPlace();
       place.show();
     }).catch(error => {
       alert('Ошибка обновления места: ', error.data.error);
@@ -87,13 +105,6 @@ export function AdminPlacesController(PlacesService) {
     return true;
   }
 
-  function cancelAdd() {
-    places.new_ = {};
-    hideNewForm();
-
-    return true;
-  }
-
   function validate(place) {
     var validations = [validateName];
 
@@ -102,5 +113,9 @@ export function AdminPlacesController(PlacesService) {
     function validateName() {
       return this.name !== 'undefined' && this.name.length >= 3;
     }
+  }
+
+  function emptyPlace() {
+    return { country: {} };
   }
 }

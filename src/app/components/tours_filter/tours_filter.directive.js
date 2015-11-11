@@ -1,4 +1,4 @@
-export function ToursFilter(ToursService, CountriesService, HotelsService) {
+export function ToursFilter(ToursService) {
   'ngInject';
   function controller() {
     var toursFilter = this;
@@ -20,7 +20,7 @@ export function ToursFilter(ToursService, CountriesService, HotelsService) {
       toursFilter.all = ToursService.query();
     }
 
-    function filter(value, index, array) {
+    function filter(value) {
       return (toursFilter.countryFilter === null || value.country.name == toursFilter.countryFilter) &&
         (toursFilter.placeFilter === null || value.place.name === toursFilter.placeFilter) &&
         (toursFilter.hotelFilter === null || value.hotel.title === toursFilter.hotelFilter);

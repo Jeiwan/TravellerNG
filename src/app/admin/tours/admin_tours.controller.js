@@ -7,9 +7,10 @@ export function AdminToursController(ToursService, CountriesService, PlacesServi
   };
   this.new_ = emptyTour();
   this.edited = emptyTour();
-  this.countryFilter = null;
+  this.all = [];
   this.countries = [];
   this.places = [];
+  this.hotels = [];
 
   this.add = add;
   this.remove = remove;
@@ -25,16 +26,18 @@ export function AdminToursController(ToursService, CountriesService, PlacesServi
   activate();
 
   function activate() {
-    tours.all = ToursService.query();
-
     $q.all([
+      ToursService.query().$promise,
       CountriesService.all().$promise,
       PlacesService.query().$promise,
       HotelsService.query().$promise
     ]).then(results => {
-      var countries = results[0],
-          places = results[1],
-          hotels = results[2];
+      var toursResult = results[0],
+          countries = results[1],
+          places = results[2],
+          hotels = results[3];
+
+      tours.all = toursResult;
 
       tours.countries = countries;
       tours.new_.country.objectId = countries[0].objectId;
@@ -49,6 +52,11 @@ export function AdminToursController(ToursService, CountriesService, PlacesServi
 
   // Добавление тура в список
   function add() {
+    if (!validate(tours.new_)) {
+      alert('Ошибка валидации');
+      return false;
+    }
+
     tours.new_.country.name = tours.countries.find(c => {
       return c.objectId === tours.new_.country.objectId;
     }).name;
@@ -70,7 +78,7 @@ export function AdminToursController(ToursService, CountriesService, PlacesServi
 
   // Удаление тура из списка
   function remove(tour) {
-    ToursService.destroy({objectId: tour.objectId}).$promise.then(result => {
+    ToursService.destroy({objectId: tour.objectId}).$promise.then(() => {
       tours.all = tours.all.filter(t => {
         return tour.objectId !== t.objectId;
       });
@@ -101,7 +109,7 @@ export function AdminToursController(ToursService, CountriesService, PlacesServi
   // Отменить редактирование тура
   function cancelEdit(tour) {
     tour.show();
-    this.edited = {};
+    this.edited = emptyTour();
   }
 
   // Сохранить изменения после редактирования тура
@@ -123,7 +131,7 @@ export function AdminToursController(ToursService, CountriesService, PlacesServi
       return h.objectId === tours.edited.hotel.objectId;
     }).title;
 
-    ToursService.update(tours.edited).$promise.then(response => {
+    ToursService.update(tours.edited).$promise.then(() => {
       angular.extend(tour, tours.edited);
       this.edited = emptyTour();
       tour.show();
@@ -163,7 +171,7 @@ export function AdminToursController(ToursService, CountriesService, PlacesServi
 
     function validateTitle() {
       return typeof this.title !== 'undefined' && this.title.length > 3;
-    };
+    }
 
     function validateText() {
       return typeof this.text !== 'undefined' && this.text.length > 3;
