@@ -19,7 +19,9 @@ import { HotelsController } from './hotels/hotels.controller.js';
 
 import { NavbarController } from './components/navbar/navbar.controller.js';
 import { NavbarDirective } from './components/navbar/navbar.directive.js'
-import { ToursFilter } from './components/tours_filter/tours_filter.directive.js';
+
+import { j1Filter } from './components/j1_filter/j1_filter.directive.js';
+import { j1Paginate } from './components/j1_paginate/j1_paginate.directive.js';
 
 import { AdminToursController } from './admin/tours/admin_tours.controller.js';
 import { AdminCountriesController } from './admin/countries/admin_countries.controller.js';
@@ -47,4 +49,5 @@ angular.module('TravellerNG', ['ngRoute', 'ngResource'])
   .controller('TourController', TourController)
   .controller('NavbarController', NavbarController)
   .directive('navbar', NavbarDirective)
-  .directive('toursFilter', ToursFilter);
+  .directive('j1Filter', j1Filter)
+  .directive('j1Paginate', j1Paginate);
