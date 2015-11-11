@@ -29,12 +29,12 @@ describe('CountriesService', function() {
     $httpBackend.whenGET(/^app\//).respond(200);
   });
 
-  describe('all', () => {
+  describe('query', () => {
     it('sends request to Parse.com', () => {
       $httpBackend.whenGET(url).respond(200);
       $httpBackend.expectGET(url).respond(200);
 
-      CountriesService.all();
+      CountriesService.query();
 
       expect($httpBackend.verifyNoOutstandingExpectation).not.toThrow();
     });
@@ -42,7 +42,7 @@ describe('CountriesService', function() {
     it('returns tours', () => {
       $httpBackend.whenGET(url).respond(200, {results: fakeCountries});
 
-      var response = CountriesService.all();
+      var response = CountriesService.query();
       $httpBackend.flush();
 
       expect(response[0].objectId).toEqual(fakeCountries[0].objectId);
@@ -78,7 +78,7 @@ describe('CountriesService', function() {
       $httpBackend.whenPOST(url).respond(200);
       $httpBackend.expectPOST(url).respond(200);
 
-      CountriesService.create(newCountry);
+      CountriesService.save(newCountry);
 
       expect($httpBackend.verifyNoOutstandingExpectation).not.toThrow();
     });
@@ -86,7 +86,7 @@ describe('CountriesService', function() {
     it('returns objectId and createdAt', () => {
       $httpBackend.whenPOST(url).respond(200, {createdAt: '2015-11-08T05:30:06.265Z', objectId: '3'});
 
-      var response = CountriesService.create(newCountry);
+      var response = CountriesService.save(newCountry);
       $httpBackend.flush();
 
       expect(response.objectId).toEqual('3');
@@ -118,12 +118,12 @@ describe('CountriesService', function() {
     });
   });
 
-  describe('destroy', () => {
+  describe('remove', () => {
     it('sends request to Parse.com', () => {
       $httpBackend.whenDELETE(url).respond(200);
       $httpBackend.expectDELETE(url).respond(200);
 
-      CountriesService.destroy({objectId: fakeCountries[0].objectId});
+      CountriesService.remove({objectId: fakeCountries[0].objectId});
 
       expect($httpBackend.verifyNoOutstandingExpectation).not.toThrow();
     });

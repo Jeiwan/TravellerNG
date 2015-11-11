@@ -23,7 +23,7 @@ export function AdminPlacesController(PlacesService, CountriesService, $q) {
   function activate() {
     $q.all([
       PlacesService.query().$promise,
-      CountriesService.all().$promise
+      CountriesService.query().$promise
     ]).then((results) => {
       var placesResult = results[0],
           countries = results[1];
@@ -44,7 +44,7 @@ export function AdminPlacesController(PlacesService, CountriesService, $q) {
       return c.objectId === places.new_.country.objectId;
     }).name;
 
-    PlacesService.create(places.new_).$promise.then(result => {
+    PlacesService.save(places.new_).$promise.then(result => {
       places.all.push(angular.extend(result, places.new_));
       places.new_ = emptyPlace();
       hideNewForm();
@@ -54,7 +54,7 @@ export function AdminPlacesController(PlacesService, CountriesService, $q) {
   }
 
   function remove(place) {
-    PlacesService.destroy({objectId: place.objectId}).$promise.then(() => {
+    PlacesService.remove({objectId: place.objectId}).$promise.then(() => {
       places.all = places.all.filter(c => {
         return place.objectId !== c.objectId;
       });

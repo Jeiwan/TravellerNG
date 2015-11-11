@@ -95,7 +95,7 @@ describe('ToursService', function() {
       $httpBackend.whenPOST(url).respond(200);
       $httpBackend.expectPOST(url).respond(200);
 
-      ToursService.create(newTour);
+      ToursService.save(newTour);
 
       expect($httpBackend.verifyNoOutstandingExpectation).not.toThrow();
     });
@@ -103,7 +103,7 @@ describe('ToursService', function() {
     it('returns objectId and createdAt', () => {
       $httpBackend.whenPOST(url).respond(200, {createdAt: '2015-11-08T05:30:06.265Z', objectId: '3'});
 
-      var response = ToursService.create(newTour);
+      var response = ToursService.save(newTour);
       $httpBackend.flush();
 
       expect(response.objectId).toEqual('3');
@@ -137,12 +137,12 @@ describe('ToursService', function() {
     });
   });
 
-  describe('destroy', () => {
+  describe('remove', () => {
     it('sends request to Parse.com', () => {
       $httpBackend.whenDELETE(url).respond(200);
       $httpBackend.expectDELETE(url).respond(200);
 
-      ToursService.destroy({objectId: fakeTours[0].objectId});
+      ToursService.remove({objectId: fakeTours[0].objectId});
 
       expect($httpBackend.verifyNoOutstandingExpectation).not.toThrow();
     });

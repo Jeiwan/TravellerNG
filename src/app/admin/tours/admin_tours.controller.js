@@ -28,7 +28,7 @@ export function AdminToursController(ToursService, CountriesService, PlacesServi
   function activate() {
     $q.all([
       ToursService.query().$promise,
-      CountriesService.all().$promise,
+      CountriesService.query().$promise,
       PlacesService.query().$promise,
       HotelsService.query().$promise
     ]).then(results => {
@@ -67,7 +67,7 @@ export function AdminToursController(ToursService, CountriesService, PlacesServi
       return h.objectId === tours.new_.hotel.objectId;
     }).title;
 
-    ToursService.create(tours.new_).$promise.then(result => {
+    ToursService.save(tours.new_).$promise.then(result => {
       tours.all.push(angular.extend(result, tours.new_));
       this.new_ = emptyTour();
       tours.hideNewForm();
@@ -78,7 +78,7 @@ export function AdminToursController(ToursService, CountriesService, PlacesServi
 
   // Удаление тура из списка
   function remove(tour) {
-    ToursService.destroy({objectId: tour.objectId}).$promise.then(() => {
+    ToursService.remove({objectId: tour.objectId}).$promise.then(() => {
       tours.all = tours.all.filter(t => {
         return tour.objectId !== t.objectId;
       });

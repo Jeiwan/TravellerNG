@@ -1,9 +1,5 @@
 export function CountriesService($http, $q, $resource) {
   'ngInject';
-  var parseQueryResult = function(response) {
-    response = angular.fromJson(response);
-    return response.results;
-  };
 
   var Country = $resource(
     'https://api.parse.com/1/classes/Country/:objectId',
@@ -30,13 +26,10 @@ export function CountriesService($http, $q, $resource) {
     }
   });
 
-  var service = {
-    all: Country.query,
-    get: Country.get,
-    create: Country.save,
-    update: Country.update,
-    destroy: Country.remove
-  };
+  return Country;
 
-  return service;
+  function parseQueryResult(response) {
+    response = angular.fromJson(response);
+    return response.results;
+  };
 }

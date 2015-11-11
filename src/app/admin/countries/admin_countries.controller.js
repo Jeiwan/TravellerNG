@@ -20,7 +20,7 @@ export function AdminCountriesController(CountriesService) {
   activate();
 
   function activate() {
-    countries.all = CountriesService.all();
+    countries.all = CountriesService.query();
   }
 
   function add() {
@@ -29,7 +29,7 @@ export function AdminCountriesController(CountriesService) {
       return false;
     }
 
-    CountriesService.create(countries.new_).$promise.then(result => {
+    CountriesService.save(countries.new_).$promise.then(result => {
       countries.all.push(angular.extend(result, countries.new_));
       countries.new_ = {};
       hideNewForm();
@@ -39,7 +39,7 @@ export function AdminCountriesController(CountriesService) {
   }
 
   function remove(country) {
-    CountriesService.destroy({objectId: country.objectId}).$promise.then(() => {
+    CountriesService.remove({objectId: country.objectId}).$promise.then(() => {
       countries.all = countries.all.filter(c => {
         return country.objectId !== c.objectId;
       });

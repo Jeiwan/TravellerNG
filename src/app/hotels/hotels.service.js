@@ -1,17 +1,6 @@
 export function HotelsService($resource) {
   'ngInject';
 
-  var parseQueryResult = function(response) {
-    return angular.fromJson(response).results;
-  };
-
-  var prepareRelations = function(request) {
-    request.place.__type = 'Pointer';
-    request.place.className = 'Place';
-
-    return angular.toJson(request);
-  };
-
   var Hotel = $resource(
     'https://api.parse.com/1/classes/Hotel/:objectId',
     { objectId: '@objectId', include: 'place' },
@@ -51,13 +40,16 @@ export function HotelsService($resource) {
     }
   });
 
-  var service = {
-    query: Hotel.query,
-    get: Hotel.get,
-    create: Hotel.save,
-    update: Hotel.update,
-    destroy: Hotel.remove
+  return Hotel;
+
+  function parseQueryResult(response) {
+    return angular.fromJson(response).results;
   };
 
-  return service;
+  function prepareRelations(request) {
+    request.place.__type = 'Pointer';
+    request.place.className = 'Place';
+
+    return angular.toJson(request);
+  };
 }
