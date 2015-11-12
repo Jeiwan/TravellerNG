@@ -13,7 +13,8 @@ export function j1Paginate() {
   return directive;
 
   function link(scope, el, attr) {
-    var filteredItems = [];
+    var filteredItems = [],
+        activated = false;
 
     scope.currentPage = 1;
     scope.changePage = changePage;
@@ -23,15 +24,18 @@ export function j1Paginate() {
     scope.lastPage = lastPage;
     scope.pages = [];
 
-
     scope.$watch('items', (newVal, oldVal) => {
-      if (newVal.length !== 0 && oldVal.length === 0) {
+      // Если элементы загрузились
+      if (!activated && newVal.length !== 0) {
         activate();
+        activated = true;
+
         return;
       }
 
-      if (!angular.equals(newVal.map((v) => v[scope.filter]), oldVal.map((v) => v[scope.filter]))) {
-        paginateAll();
+      // Если изменилась фильтрация элементов
+      if (typeof scope.filter !== 'undefined' &&
+          !angular.equals(newVal.map((v) => v[scope.filter]), oldVal.map((v) => v[scope.filter]))) {
         activate();
       }
     }, true);
@@ -43,11 +47,16 @@ export function j1Paginate() {
     function activate() {
       var pages = 0;
 
-      filteredItems = scope.items.filter((i) => {
-        return i[scope.filter] !== false;
-      });
+      if (typeof scope.filter !== 'undefined') {
+        filteredItems = scope.items.filter((i) => {
+          return i[scope.filter] !== false;
+        });
+      } else {
+        filteredItems = angular.copy(scope.items);
+      }
+      //scope.filteredItems = filteredItems;
 
-      pages = parseInt(filteredItems.length / parseInt(scope.perPage, 10), 10);
+      pages = Math.ceil(filteredItems.length / parseInt(scope.perPage, 10), 10);
 
       scope.pages = [];
       for(var i = 1; i <= pages; i++) {
@@ -61,6 +70,11 @@ export function j1Paginate() {
      * @param {Number} n Page number
      */
     function changePage(n) {
+      if (n > scope.pages.length) {
+        alert('Wrong page number!');
+
+        return;
+      };
       depaginateAll();
       paginatePage(n);
       scope.currentPage = n;
