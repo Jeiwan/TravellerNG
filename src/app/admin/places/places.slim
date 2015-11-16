@@ -1,27 +1,14 @@
 a.btn.btn-primary.pull-right ng-hide="places.state.newForm.visible" ng-click="places.showNewForm()"
   span.glyphicon.glyphicon-plus
   |  Добавить место
-form.new-place-tour.row ng-show="places.state.newForm.visible"
-  table.table
-    tbody
-      tr
-        td
-          select.form-control ng-model="places.new_.country.objectId" ng-options="country.objectId as country.name for country in places.countries"
-        td
-          input.form-control ng-model="places.new_.name"
-        td
-          button.btn.btn-default.pull-right ng-click="places.hideNewForm()" Отменить
-          button.add-place-btn.btn.btn-success.pull-right ng-click="places.add()" Добавить
+
+ng-include src="'app/admin/places/new_place_form.html'" ng-show="places.state.newForm.visible"
 
 table.table.places
-  tbody
-    tr ng-repeat="place in places.all"
+  tbody ng-repeat="place in places.all"
+    tr ng-show="place.isShown()"
       td ng-bind="place.country.name" ng-show="place.isShown()"
       td ng-bind="place.name" ng-show="place.isShown()"
-      td ng-show="place.isEdited()"
-        select.form-control ng-model="places.edited.country.objectId" ng-options="country.objectId as country.name for country in places.countries"
-      td ng-show="place.isEdited()"
-        input.form-control type="text" ng-model="places.edited.name"
       td
         a.text-danger.pull-right href="" ng-click="places.remove(place)" ng-show="place.isShown()"
           span.glyphicon.glyphicon-remove
@@ -29,6 +16,6 @@ table.table.places
         a.edit-place.pull-right href="" ng-click="places.edit(place)" ng-show="place.isShown()"
           span.glyphicon.glyphicon-pencil
           |  Редактировать
-
-        button.btn.btn-default.pull-right ng-click="places.cancelEdit(place)" ng-show="place.isEdited()" Отменить
-        button.update-place.btn.btn-success.pull-right ng-click="places.update(place)" ng-show="place.isEdited()" Сохранить
+    tr ng-show="place.isEdited()"
+      td colspan="3"
+        ng-include src="'app/admin/places/edit_place_form.html'"

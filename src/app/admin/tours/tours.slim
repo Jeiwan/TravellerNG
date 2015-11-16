@@ -8,32 +8,7 @@
     a.btn.btn-primary.pull-right ng-disabled="tours.newFormVisible()" ng-click="tours.showNewForm()"
       span.glyphicon.glyphicon-plus
       |  Добавить новый тур
-
-form.new-tour-form ng-show="tours.newFormVisible()"
-  .form-group.row
-    .col-xs-4
-      label.control-label Страна
-      select.form-control ng-model="tours.new_.country.objectId" ng-options="country.objectId as country.name for country in tours.countries"
-    .col-xs-4
-      label.control-label Место
-      select.form-control ng-model="tours.new_.place.objectId" ng-options="place.objectId as place.name for place in tours.possiblePlaces(tours.new_)" ng-enable="tours.new_.country"
-    .col-xs-4
-      label.control-label Гостиница
-      select.form-control ng-model="tours.new_.hotel.objectId" ng-options="hotel.objectId as hotel.title for hotel in tours.possibleHotels(tours.new_)" ng-enable="tours.new_.place"
-  .form-group.row
-    .col-xs-10
-      label.control-label Название
-      input.form-control type="text" ng-model="tours.new_.title"
-    .col-xs-2
-      label.control-label Стоимость
-      input.form-control type="number" ng-model="tours.new_.price"
-  .form-group
-    label.control-label Описание
-    textarea.form-control rows="5" ng-model="tours.new_.text"
-  .form-group
-    a.btn.btn-default.pull-right href="" ng-click="tours.hideNewForm()" Отменить
-    button.new-tour-btn.btn.btn-info.pull-right ng-click="tours.add()" Добавить тур
-.clearfix
+ng-include src="'app/admin/tours/new_tour_form.html'" ng-show="tours.newFormVisible()"
 
 .tour ng-repeat="tour in tours.all" ng-show="tour.filtered && tour.paginated"
   .panel.panel-default ng-show="tour.isShown()"
@@ -55,25 +30,7 @@ form.new-tour-form ng-show="tours.newFormVisible()"
         |  Редактировать
       .clearfix
 
-  form.edit-tour-form ng-show="tour.state === 'edit'"
-    .form-group.row
-      .col-xs-4
-        select.form-control ng-model="tours.edited.country.objectId" ng-options="country.objectId as country.name for country in tours.countries"
-      .col-xs-4
-        select.form-control ng-model="tours.edited.place.objectId" ng-options="place.objectId as place.name for place in tours.possiblePlaces(tours.edited)"
-      .col-xs-4
-        select.form-control ng-model="tours.edited.hotel.objectId" ng-options="hotel.objectId as hotel.title for hotel in tours.possibleHotels(tours.edited)"
-    .form-group.row
-      .col-xs-8
-        input.form-control type="text" ng-model="tours.edited.title"
-      .col-xs-4
-        input.form-control type="number" ng-model="tours.edited.price"
-    .form-group
-      textarea.form-control rows="5" ng-model="tours.edited.text"
-    .form-group
-    .form-group
-      button.btn.btn-default.pull-right ng-click="tours.cancelEdit(tour)" Отменить
-      button.save-edit-tour.btn.btn-info.pull-right ng-click="tours.update(tour)" Сохранить
+  ng-include src="'app/admin/tours/edit_tour_form.html'" ng-show="tour.isEdited()"
   .clearfix
 
 <j1-paginate items="tours.all" per-page="1" filter="filtered"></j1-paginate>

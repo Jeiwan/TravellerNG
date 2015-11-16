@@ -205,19 +205,6 @@ describe('AdminHotelsController', () => {
     });
   });
 
-  describe('ratingStars(n)', () => {
-    describe('when n = 0', () => {
-      it('returns glyphicon-star-empty', () => {
-        expect(AdminHotelsController.ratingStars(0)).toEqual('glyphicon-star-empty');
-      });
-    });
-    describe('when n = 1', () => {
-      it('returns glyphicon-star', () => {
-        expect(AdminHotelsController.ratingStars(1)).toEqual('glyphicon-star');
-      });
-    });
-  });
-
   describe('validate(hotel)', () => {
     describe('when hotel title length is less than 3 characters', () => {
       it('alerts error', () => {

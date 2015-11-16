@@ -34,17 +34,4 @@ describe('ToursController', () => {
       });
     });
   });
-
-  describe('limitedText', () => {
-    it('returns only 20 words of incoming text', () => {
-      var text = [];
-
-      for(var i = 0; i < 30; i++) {
-        text.push('hello');
-      }
-      text = text.join(' ');
-
-      expect(ToursController.limitedText({text: text}).split(' ').length).toEqual(20);
-    });
-  });
 });

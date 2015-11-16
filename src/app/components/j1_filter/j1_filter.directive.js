@@ -25,6 +25,7 @@ export function j1Filter() {
       if (newValue.length !== 0) {
         buildValues();
         deregister();
+        scope.items.forEach(i => i.filtered = true);
       }
     });
 
@@ -49,7 +50,7 @@ export function j1Filter() {
         // Отменяем фильтрацию только для тех элементов,
         // которые были отфильтрованы этим фильтром
         scope.items.filter((i) => {
-          return i.j1FilteredOutBy === scope.field;
+          return typeof i.j1FilteredOutBy !== 'undefined' ? i.j1FilteredOutBy === scope.field : true;
         }).forEach((i) => {
           i.filtered = true;
           i.j1FilteredOutBy = null;
