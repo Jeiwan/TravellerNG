@@ -1,6 +1,9 @@
 .row
   .col-xs-8
-    <tours-filter></tours-filter>
+    .tour-filters
+      <j1-filter items="tours.all" field="country.name" priority="1" width="4"><span class="glyphicon glyphicon-remove"></span></j1-filter>
+      <j1-filter items="tours.all" field="place.name" priority="2" width="4"><span class="glyphicon glyphicon-remove"></span></j1-filter>
+      <j1-filter items="tours.all" field="hotel.title" priority="3" width="4"><span class="glyphicon glyphicon-remove"></span></j1-filter>
   .col-xs-4
     a.btn.btn-primary.pull-right ng-disabled="tours.newFormVisible()" ng-click="tours.showNewForm()"
       span.glyphicon.glyphicon-plus
@@ -32,7 +35,7 @@ form.new-tour-form ng-show="tours.newFormVisible()"
     button.new-tour-btn.btn.btn-info.pull-right ng-click="tours.add()" Добавить тур
 .clearfix
 
-.tour ng-repeat="tour in tours.all | filter:toursFilter.filter"
+.tour ng-repeat="tour in tours.all" ng-show="tour.filtered && tour.paginated"
   .panel.panel-default ng-show="tour.isShown()"
     .panel-body
       h3
@@ -72,3 +75,5 @@ form.new-tour-form ng-show="tours.newFormVisible()"
       button.btn.btn-default.pull-right ng-click="tours.cancelEdit(tour)" Отменить
       button.save-edit-tour.btn.btn-info.pull-right ng-click="tours.update(tour)" Сохранить
   .clearfix
+
+<j1-paginate items="tours.all" per-page="1" filter="filtered"></j1-paginate>

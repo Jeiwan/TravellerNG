@@ -1,0 +1,10 @@
+button.btn.btn-default ng-click="firstPage()" ng-show="currentPage !== 1"
+  span.glyphicon.glyphicon-fast-backward
+button.btn.btn-default ng-click="previousPage()" ng-show="currentPage !== 1"
+  span.glyphicon.glyphicon-backward
+.btn-group ng-show="pages.length > 1"
+  button.btn.btn-default ng-repeat="page in pages" ng-bind="page" ng-click="changePage(page)" ng-disabled="page === currentPage"
+button.btn.btn-default ng-click="nextPage()" ng-show="currentPage !== pages.length"
+  span.glyphicon.glyphicon-forward
+button.btn.btn-default ng-click="lastPage()" ng-show="currentPage !== pages.length"
+  span.glyphicon.glyphicon-fast-forward
