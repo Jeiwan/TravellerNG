@@ -18,9 +18,11 @@ export function j1Filter() {
 
   function link(scope, el, attr) {
     scope.resetFilter = resetFilter;
+    scope.selectedItem = null;
+    scope.values = [];
 
-    var deregister = scope.$watchCollection('items', (newValue, oldValue) => {
-      if (newValue.length !== 0 && oldValue.length === 0) {
+    var deregister = scope.$watchCollection('items', (newValue, _oldValue) => {
+      if (newValue.length !== 0) {
         buildValues();
         deregister();
       }
@@ -77,7 +79,6 @@ export function j1Filter() {
       var values = scope.items.filter((i) => {
         return i.filtered !== false;
       }).map((i) => {
-        i.filtered = true;
         return deepSeek(i, scope.field);
       });
 
@@ -95,6 +96,8 @@ export function j1Filter() {
    */
   function deepSeek(obj, path) {
     var prop, props = path.split('.');
+
+    prop = props[0];
 
     for (var i = 0; i < props.length - 1; i++) {
       var nextObj = obj[props[i]];
