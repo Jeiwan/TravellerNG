@@ -1,0 +1,16 @@
+form.new-hotel-tour.row name="form"
+  .form-group.col-xs-3 ng-class="{'has-error': form.place.$touched && form.place.$invalid}"
+    select.form-control name="place" required="" ng-model="hotels.new_.place.objectId" ng-options="place.objectId as place.name for place in hotels.places"
+    span.help-block ng-show="form.place.$error.required && form.place.$touched" Обязательное поле
+  .form-group.col-xs-3 ng-class="{'has-error': form.title.$touched && form.title.$invalid}"
+    input.form-control name="title" required="" minlength="3" ng-model="hotels.new_.title"
+    div ng-messages="form.title.$error" ng-show="form.title.$touched"
+      span.help-block ng-message="required" Обязательное поле
+      span.help-block ng-message="minlength" Не может быть короче 3 символов
+  .form-group.col-xs-1 ng-class="{'has-error': form.stars.$touched && form.stars.$invalid}"
+    select.form-control name="stars" required="" min="0" max="5" ng-model="hotels.new_.stars" ng-options="n as n for n in [1, 2, 3, 4, 5, 6]"
+    span.help-block ng-show="form.stars.$error.required && form.stars.$touched" Обязательное поле
+
+  .col-xs-5
+    button.btn.btn-default.pull-right ng-click="hotels.cancelAdd()" Отменить
+    button.add-hotel-btn.btn.btn-success.pull-right ng-click="hotels.add()" ng-disabled="form.$invlid" Добавить

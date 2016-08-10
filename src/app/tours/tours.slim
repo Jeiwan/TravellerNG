@@ -1,9 +1,9 @@
 .tour-filters
-  <j1-filter items="tours.all" field="country.name" priority="1" width="4"><span class="glyphicon glyphicon-remove"></span></j1-filter>
-  <j1-filter items="tours.all" field="place.name" priority="2" width="4"><span class="glyphicon glyphicon-remove"></span></j1-filter>
-  <j1-filter items="tours.all" field="hotel.title" priority="3" width="4"><span class="glyphicon glyphicon-remove"></span></j1-filter>
+  <j1-filter items="tours.all" field="country.name" priority="1"><span class="glyphicon glyphicon-remove"></span></j1-filter>
+  <j1-filter items="tours.all" field="place.name" priority="2"><span class="glyphicon glyphicon-remove"></span></j1-filter>
+  <j1-filter items="tours.all" field="hotel.title" priority="3"><span class="glyphicon glyphicon-remove"></span></j1-filter>
 
-.tour ng-repeat="tour in tours.all" ng-show="tour.filtered && tour.paginated"
+.tour ng-repeat="tour in tours.all | filter : {filtered: true, paginated: true}"
   .panel.panel-default
     .panel-body
       h3
@@ -13,6 +13,6 @@
         br
         strong.tour-hotel ng-bind="tour.hotel.title"
       hr
-      p {{ tours.limitedText(tour) }}
+      p ng-bind="tour.text | limitedText"
 
 <j1-paginate items="tours.all" per-page="1" filter="filtered"></j1-paginate>

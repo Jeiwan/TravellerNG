@@ -28,8 +28,10 @@ import { AdminCountriesController } from './admin/countries/admin_countries.cont
 import { AdminPlacesController } from './admin/places/admin_places.controller.js';
 import { AdminHotelsController } from './admin/hotels/admin_hotels.controller.js';
 
+import { StarsFilter } from './filters/stars/stars.filter.js';
+import { LimitedTextFilter } from './filters/limitedText/limited_text.filter.js';
 
-angular.module('TravellerNG', ['ngRoute', 'ngResource'])
+angular.module('TravellerNG', ['ngRoute', 'ngResource', 'ngMessages'])
   .config(config)
   .config(routerConfig)
   .run(run)
@@ -38,6 +40,8 @@ angular.module('TravellerNG', ['ngRoute', 'ngResource'])
   .factory('HotelsService', HotelsService)
   .factory('PlacesService', PlacesService)
   .factory('ToursService', ToursService)
+  .filter('stars', StarsFilter)
+  .filter('limitedText', LimitedTextFilter)
   .controller('AdminCountriesController', AdminCountriesController)
   .controller('AdminToursController', AdminToursController)
   .controller('AdminPlacesController', AdminPlacesController)

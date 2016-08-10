@@ -1,0 +1,22 @@
+form.form-inline.edit-place-form name="form"
+  .form-group ng-class="{'has-error': form.country.$touched && form.country.$invalid}"
+    select.form-control[
+      name="country"
+      required=""
+      ng-model="places.edited.country.objectId"
+      ng-options="country.objectId as country.name for country in places.countries"
+    ]
+    span.help-block ng-show="form.country.$error.required" Обязательное поле
+  .form-group ng-class="{'has-error': form.name.$touched && form.name.$invalid}"
+    input.form-control[
+      name="name"
+      required=""
+      minlength="3"
+      type="text" ng-model="places.edited.name"
+    ]
+    div ng-messages="form.name.$error" ng-show="form.name.$touched"
+      span.help-block ng-message="required" Обязательное поле
+      span.help-block ng-message="minlength" Не может быть короче 3 символов
+  .form-group.pull-right
+    button.btn.btn-default.pull-right type="reset" ng-click="places.cancelEdit(place)" ng-show="place.isEdited()" Отменить
+    button.update-place.btn.btn-success.pull-right ng-click="places.update(place)" ng-show="place.isEdited()" type="submit" ng-disabled="form.$invalid" Сохранить

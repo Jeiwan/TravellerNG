@@ -1,0 +1,14 @@
+form.form-inline name="form"
+  .form-group ng-class="{'has-error': form.name.$touched && form.name.$invalid}"
+    input.form-control[
+      name="name"
+      required=""
+      minlength="3"
+      type="text" ng-model="countries.edited.name"
+    ]
+    div ng-messages="form.name.$error" ng-show="form.name.$touched"
+      span.help-block ng-message="required" Обязательное поле
+      span.help-block ng-message="minlength" Не может быть короче 3 символов
+  .form-group.pull-right
+    button.btn.btn-default.pull-right type="reset" ng-click="countries.cancelEdit(country)" Отменить
+    button.update-country.btn.btn-success.pull-right type="submit" ng-click="countries.update(country)" Сохранить

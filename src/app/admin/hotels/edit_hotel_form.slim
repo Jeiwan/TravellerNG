@@ -1,0 +1,31 @@
+form.form-inline.edit-hotel-form name="form"
+  .form-group ng-class="{'has-error': form.place.$touched && form.place.$invalid}"
+    select.form-control[
+      name="place"
+      required=""
+      ng-model="hotels.edited.place.objectId"
+      ng-options="place.objectId as place.name for place in hotels.places"
+    ]
+    span.help-block ng-show="form.place.$error.required && form.place.$touched" Обязательное поле
+  .form-group ng-class="{'has-error': form.title.$touched && form.title.$invalid}"
+    input.form-control[
+      name="title"
+      required=""
+      minlength="3"
+      type="text"
+      ng-model="hotels.edited.title"
+    ]
+    div ng-messages="form.title.$error" ng-show="form.title.$touched"
+      span.help-block ng-message="required" Обязательное поле
+      span.help-block ng-message="minlength" Не может быть короче 3 символов
+  .form-group ng-class="{'has-error': form.stars.$touched && form.stars.$invalid}"
+    select.form-control[
+      name="stars"
+      required=""
+      ng-model="hotels.edited.stars"
+      ng-options="n as n for n in [1, 2, 3, 4, 5]"
+    ]
+    span.help-block ng-show="form.stars.$error.required && form.stars.$touched" Обязательное поле
+  .form-group.pull-right
+    button.btn.btn-default.pull-right type="reset" ng-click="hotels.cancelEdit(hotel)" ng-show="hotel.isEdited()" Отменить
+    button.update-hotel.btn.btn-success.pull-right type="submit" ng-click="hotels.update(hotel)" ng-show="hotel.isEdited()" Сохранить

@@ -28,17 +28,4 @@ describe('HotelsController', () => {
       expect(HotelsController.all.length).toEqual(2);
     });
   });
-
-  describe('ratingStars(n)', () => {
-    describe('when n = 0', () => {
-      it('returns glyphicon-star-empty', () => {
-        expect(HotelsController.ratingStars(0)).toEqual('glyphicon-star-empty');
-      });
-    });
-    describe('when n = 1', () => {
-      it('returns glyphicon-star', () => {
-        expect(HotelsController.ratingStars(1)).toEqual('glyphicon-star');
-      });
-    });
-  });
 });

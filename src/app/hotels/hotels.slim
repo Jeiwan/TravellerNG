@@ -4,5 +4,4 @@
       tbody
         tr ng-repeat="hotel in hotels.all"
           td ng-bind="hotel.title"
-          td
-            span.rating-star.glyphicon ng-class="hotels.ratingStars(n)" ng-repeat="n in hotels.starsArray(hotel) track by $index"
+          td ng-bind-html="hotel.stars | stars"

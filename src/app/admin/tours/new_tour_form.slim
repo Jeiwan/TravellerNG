@@ -1,0 +1,39 @@
+form.new-tour-form name="form"
+  .row
+    .col-xs-4.form-group ng-class="{'has-error': form.country.$touched && form.country.$invalid}"
+      label.control-label Страна
+      select.form-control name="country" required="" ng-model="tours.new_.country.objectId" ng-options="country.objectId as country.name for country in tours.countries"
+      span.help-block ng-show="form.country.$error.required" Обязательное поле
+    .col-xs-4.form-group ng-class="{'has-error': form.place.$touched && form.place.$invalid}"
+      label.control-label Место
+      select.form-control name="place" required="" ng-model="tours.new_.place.objectId" ng-options="place.objectId as place.name for place in tours.possiblePlaces(tours.new_)" ng-enable="tours.new_.country"
+      span.help-block ng-show="form.place.$error.required" Обязательное поле
+    .col-xs-4.form-group ng-class="{'has-error': form.hotel.$touched && form.hotel.$invalid}"
+      label.control-label Гостиница
+      select.form-control name="hotel" required="" ng-model="tours.new_.hotel.objectId" ng-options="hotel.objectId as hotel.title for hotel in tours.possibleHotels(tours.new_)" ng-enable="tours.new_.place"
+      span.help-block ng-show="form.hotel.$error.required" Обязательное поле
+  .row
+    .form-group.col-xs-10 ng-class="{'has-error': form.title.$touched && form.title.$invalid}"
+      label.control-label Название
+      input.form-control type="text" name="title" ng-model="tours.new_.title" required="" minlength="3"
+      div ng-messages="form.title.$error" ng-show="form.title.$touched"
+        span.help-block ng-message="required" Обязательное поле
+        span.help-block ng-message="minlength" Не может быть короче 3 символов
+    .form-group.col-xs-2 ng-class="{'has-error': form.price.$touched && form.price.$invalid}"
+      label.control-label Стоимость
+      input.form-control type="number" name="price" ng-model="tours.new_.price" required="" min="0.01" max="999999.0"
+      div ng-messages="form.price.$error" ng-show="form.price.$touched"
+        span.help-block ng-message="required" Обязательное поле
+        span.help-block ng-message="min" Не может быть меньше 0.01
+        span.help-block ng-message="max" Не может быть больше 999999
+  .form-group ng-class="{'has-error': form.text.$touched && form.text.$invalid}"
+    label.control-label Описание
+    textarea.form-control rows="5" name="text" ng-model="tours.new_.text" required="true" minlength="3"
+    div ng-messages="form.text.$error" ng-show="form.text.$touched"
+      span.help-block ng-message="required" Обязательное поле
+      span.help-block ng-message="minlength" Не может быть короче 3 символов
+  .form-group
+    a.btn.btn-default.pull-right href="" ng-click="tours.hideNewForm()" Отменить
+    button.new-tour-btn.btn.btn-info.pull-right ng-disabled="form.$invalid" ng-click="tours.add()" Добавить тур
+.clearfix
+

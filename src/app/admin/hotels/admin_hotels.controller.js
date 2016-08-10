@@ -18,7 +18,6 @@ export function AdminHotelsController(HotelsService, PlacesService, $q) {
   this.showNewForm = showNewForm;
   this.hideNewForm = hideNewForm;
   this.cancelAdd = cancelAdd;
-  this.ratingStars = ratingStars;
 
   activate();
 
@@ -114,10 +113,6 @@ export function AdminHotelsController(HotelsService, PlacesService, $q) {
     hideNewForm();
 
     return true;
-  }
-
-  function ratingStars(n) {
-    return 'glyphicon-star' + (n == 0 ? '-empty' : '');
   }
 
   function validate(hotel) {
